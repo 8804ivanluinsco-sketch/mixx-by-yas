@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Step 2 - Personal Details</title>
+
+    <!-- ✅ MOBILE + NO ZOOM -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="header"></div>
+
+    <div class="container">
+
+        <h2 class="title">Personal Details</h2>
+
+        <!-- NAMES -->
+        <input id="fname" placeholder="First Name" pattern="[A-Za-z]+" title="Only letters allowed">
+
+        <input id="lname" placeholder="Last Name" pattern="[A-Za-z]+" title="Only letters allowed">
+
+        <!-- PHONE -->
+        <input id="phone" value="+233" placeholder="Phone Number" inputmode="numeric" pattern="^\+2337[0-9]{8}$"
+            title="Enter valid Zimbabwe number">
+
+        <!-- EMAIL -->
+        <input id="email" placeholder="Email Address" type="email">
+
+        <p id="errorBox" style="color:red; text-align:center; display:none;"></p>
+        <br>
+        <br>
+        <br>
+        <button onclick="nextStep2()">Next</button>
+
+    </div>
+
+    <div class="footer"></div>
+
+    <script>
+        function nextStep2() {
+            const fname = document.getElementById("fname").value.trim();
+            const lname = document.getElementById("lname").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+
+            const nameRegex = /^[A-Za-z]+$/;
+            const phoneRegex = /^\+2337[0-9]{8}$/;
+
+            if (!fname || !lname || !phone || !email) {
+                showError("Please fill all required fields");
+                return;
+            }
+
+            if (!nameRegex.test(fname) || !nameRegex.test(lname)) {
+                showError("Names must contain only letters");
+                return;
+            }
+
+            if (!phoneRegex.test(phone)) {
+                showError("Enter valid Ghana phone (+2337XXXXXXXX)");
+                return;
+            }
+
+            // ✅ SAVE DATA (THIS FIXES NAME NOT SHOWING)
+            localStorage.setItem("fname", fname);
+            localStorage.setItem("lname", lname);
+            localStorage.setItem("fullName", fname + " " + lname); // 👈 IMPORTANT
+            localStorage.setItem("phone", phone);
+            localStorage.setItem("email", email);
+
+            // move to next step
+            showLoaderAndGo("step3.html");
+        }
+    </script>
+
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add("loaded");
+        });
+    </script>
+
+    <div id="pageLoader" class="loader" style="display:none;"></div>
+
+</body>
+
+</html>
