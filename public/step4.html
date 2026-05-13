@@ -28,9 +28,11 @@
         <p><strong>Name:</strong> <span id="name"></span></p>
         <p><strong>Phone:</strong> <span id="phone"></span></p>
         <p><strong>Next of Kin:</strong> <span id="kin"></span></p>
+        <br>
+        <button onclick="nextStep4()">Next</button>
     </div>
 
-        <button onclick="nextStep4()">Next</button>
+        
 
 </div>
 
@@ -41,9 +43,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("name").innerText = localStorage.getItem("fullName");
-});
+
+   document.getElementById("name").innerText =
+    localStorage.getItem("fname") + " " + localStorage.getItem("lname");
 
    document.getElementById("amountText").innerText =
     "$" + (localStorage.getItem("amount") || "-");
