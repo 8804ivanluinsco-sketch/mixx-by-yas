@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,6 +34,7 @@
         margin: 0;
         padding: 0;
         height: 100vh;
+        height: 100dvh;
         display: flex;
         flex-direction: column;
         overflow: hidden; /* Prevent full page scroll */
@@ -89,6 +89,7 @@
         position: relative;
         width: 85%;
         max-width: 600px;
+        max-height: 40vh;
         aspect-ratio: 1 / 1;
         display: flex;
         justify-content: center;
@@ -162,13 +163,13 @@
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         padding: 1.5rem;
-        padding-bottom: env(
-          safe-area-inset-bottom,
-          1.5rem
+        padding-bottom: calc(
+          1.5rem + env(safe-area-inset-bottom)
         ); /* For iPhone notch/bar */
         box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 10;
+        flex-shrink: 0;
       }
 
       .phone-input-group {
@@ -323,63 +324,111 @@
 
     <main class="slider-container" id="sliderContainer">
       <!-- Slide 1 -->
-        <div class="slide active" id="slide1">
-            <div class="slide-img-wrapper">
-                <!-- Using placeholder if exact image isn't available, but structured to accept it -->
-                <img src="slider-img-1.png" alt="Woman using Super App" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+1'">
-            </div>
-            <div class="slide-text-container">
-                <h2 class="slide-text-main" data-i18n="slide1_main">Apps mbalimbali<br>zinapatikana..</h2>
-                <p class="slide-text-highlight" data-i18n="slide1_sub">ndani ya Super App yako</p>
-            </div>
+      <div class="slide active" id="slide1">
+        <div class="slide-img-wrapper">
+          <!-- Using placeholder if exact image isn't available, but structured to accept it -->
+          <img
+            src="slider-img-1.png"
+            alt="Woman using Super App"
+            class="slide-img"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+1'
+            "
+          />
         </div>
+        <div class="slide-text-container">
+          <h2 class="slide-text-main" data-i18n="slide1_main">
+            Apps mbalimbali<br />zinapatikana..
+          </h2>
+          <p class="slide-text-highlight" data-i18n="slide1_sub">
+            ndani ya Super App yako
+          </p>
+        </div>
+      </div>
 
-        <!-- Slide 2 -->
-        <div class="slide" id="slide2">
-            <div class="slide-img-wrapper">
-                <img src="slider-img-2.png" alt="Woman smiling at phone" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+2'">
-            </div>
-            <div class="slide-text-container">
-                <h2 class="slide-text-main" data-i18n="slide2_main">Huduma za kifedha Halal..</h2>
-                <p class="slide-text-highlight" data-i18n="slide2_sub">ndani ya Super App yako</p>
-            </div>
+      <!-- Slide 2 -->
+      <div class="slide" id="slide2">
+        <div class="slide-img-wrapper">
+          <img
+            src="slider-img-2.png"
+            alt="Woman smiling at phone"
+            class="slide-img"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+2'
+            "
+          />
         </div>
+        <div class="slide-text-container">
+          <h2 class="slide-text-main" data-i18n="slide2_main">
+            Huduma za kifedha Halal..
+          </h2>
+          <p class="slide-text-highlight" data-i18n="slide2_sub">
+            ndani ya Super App yako
+          </p>
+        </div>
+      </div>
 
-        <!-- Slide 3 -->
-        <div class="slide" id="slide3">
-             <div class="slide-img-wrapper">
-                <!-- Removed inline styles and added img-tight-crop class -->
-                <img src="slider-img-3.png" alt="Habari" class="slide-img img-tight-crop" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+3'">
-            </div>
-            <div class="slide-text-container">
-                <h2 class="slide-text-main">Habari na Burudani..</h2>
-                <p class="slide-text-highlight">ndani ya Super App yako</p>
-            </div>
+      <!-- Slide 3 -->
+      <div class="slide" id="slide3">
+        <div class="slide-img-wrapper">
+          <!-- Removed inline styles and added img-tight-crop class -->
+          <img
+            src="slider-img-3.png"
+            alt="Habari"
+            class="slide-img img-tight-crop"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+3'
+            "
+          />
         </div>
-        
-        <!-- Slide 4 -->
-        <div class="slide" id="slide4">
-             <div class="slide-img-wrapper">
-                <!-- Removed inline styles and added img-tight-crop class -->
-                <img src="slider-img-4.png" alt="Manunuzi" class="slide-img img-tight-crop" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+4'">
-            </div>
-            <div class="slide-text-container">
-                <h2 class="slide-text-main">Manunuzi Rahisi..</h2>
-                <p class="slide-text-highlight">ndani ya Super App yako</p>
-            </div>
+        <div class="slide-text-container">
+          <h2 class="slide-text-main">Habari na Burudani..</h2>
+          <p class="slide-text-highlight">ndani ya Super App yako</p>
         </div>
+      </div>
 
-        <!-- Slide 5 -->
-        <div class="slide" id="slide5">
-             <div class="slide-img-wrapper">
-                <!-- Removed inline styles -->
-                <img src="slider-img-5.png" alt="Marafiki" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+5'">
-            </div>
-            <div class="slide-text-container">
-                <h2 class="slide-text-main">Ungana na Marafiki..</h2>
-                <p class="slide-text-highlight">ndani ya Super App yako</p>
-            </div>
+      <!-- Slide 4 -->
+      <div class="slide" id="slide4">
+        <div class="slide-img-wrapper">
+          <!-- Removed inline styles and added img-tight-crop class -->
+          <img
+            src="slider-img-4.png"
+            alt="Manunuzi"
+            class="slide-img img-tight-crop"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+4'
+            "
+          />
         </div>
+        <div class="slide-text-container">
+          <h2 class="slide-text-main">Manunuzi Rahisi..</h2>
+          <p class="slide-text-highlight">ndani ya Super App yako</p>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="slide" id="slide5">
+        <div class="slide-img-wrapper">
+          <!-- Removed inline styles -->
+          <img
+            src="slider-img-5.png"
+            alt="Marafiki"
+            class="slide-img"
+            onerror="
+              this.src =
+                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+5'
+            "
+          />
+        </div>
+        <div class="slide-text-container">
+          <h2 class="slide-text-main">Ungana na Marafiki..</h2>
+          <p class="slide-text-highlight">ndani ya Super App yako</p>
+        </div>
+      </div>
 
       <!-- Add more slides here if needed. The design shows 5 dots, so we create 5 total logically -->
 
