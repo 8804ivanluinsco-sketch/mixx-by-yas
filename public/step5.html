@@ -117,6 +117,7 @@
         width: 85%;
         max-width: 400px;
         text-align: left;
+        padding: 0 100px 0 0;
       }
 
       .slide-text-main {
@@ -284,198 +285,232 @@
     </style>
   </head>
   <body>
-    <header class="p-4 relative z-20 flex justify-between items-center w-full">
-      <div class="relative" id="langDropdownContainer">
-        <button
-          id="langToggleBtn"
-          class="lang-toggle flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-white/20"
-        >
-          <img
-            src="https://flagcdn.com/w40/tz.png"
-            alt="Tanzania Flag"
-            class="w-5 h-5 rounded-full object-cover border border-white/30"
-            id="currentFlag"
-          />
-          <span id="currentLangText">Swahili</span>
-          <i class="fa-solid fa-chevron-down text-xs ml-1 opacity-70"></i>
-        </button>
+    <div
+      id="splash-screen"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-[#0A3D7E] transition-opacity duration-500">
+      <div class="text-center">
+        <img
+          src="splash-logo-removebg-preview.png"
+          alt=""
+          srcset=""
+          style="height: 150px"
+        />
+      </div>
+    </div>
 
-        <!-- Language Dropdown Menu -->
-        <div id="langDropdown" class="lang-dropdown-menu">
-          <div class="lang-option" data-lang="sw" data-flag="tz">
+    <div id="main-content" class="w-full h-full flex flex-col opacity-0 transition-opacity duration-1000">
+      
+      <header
+        class="p-4 relative z-20 flex justify-between items-center w-full"
+      >
+        <div class="relative" id="langDropdownContainer">
+          <button
+            id="langToggleBtn"
+            class="lang-toggle flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-white/20"
+          >
             <img
               src="https://flagcdn.com/w40/tz.png"
               alt="Tanzania Flag"
-              class="w-5 h-5 rounded-full object-cover"
+              class="w-5 h-5 rounded-full object-cover border border-white/30"
+              id="currentFlag"
             />
-            <span>Swahili (TZ)</span>
+            <span id="currentLangText">Swahili</span>
+            <i class="fa-solid fa-chevron-down text-xs ml-1 opacity-70"></i>
+          </button>
+
+          <!-- Language Dropdown Menu -->
+          <div id="langDropdown" class="lang-dropdown-menu">
+            <div class="lang-option" data-lang="sw" data-flag="tz">
+              <img
+                src="https://flagcdn.com/w40/tz.png"
+                alt="Tanzania Flag"
+                class="w-5 h-5 rounded-full object-cover"
+              />
+              <span>Swahili (TZ)</span>
+            </div>
+            <div class="lang-option" data-lang="en" data-flag="gb">
+              <img
+                src="https://flagcdn.com/w40/gb.png"
+                alt="UK Flag"
+                class="w-5 h-5 rounded-full object-cover"
+              />
+              <span>English (UK)</span>
+            </div>
           </div>
-          <div class="lang-option" data-lang="en" data-flag="gb">
+        </div>
+      </header>
+
+      <main class="slider-container" id="sliderContainer">
+        <!-- Slide 1 -->
+        <div class="slide active" id="slide1">
+          <div class="slide-img-wrapper">
+            <!-- Using placeholder if exact image isn't available, but structured to accept it -->
             <img
-              src="https://flagcdn.com/w40/gb.png"
-              alt="UK Flag"
-              class="w-5 h-5 rounded-full object-cover"
+              src="slider-img-1.png"
+              alt="Woman using Super App"
+              class="slide-img"
+              onerror="
+                this.src =
+                  'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+1'
+              "
             />
-            <span>English (UK)</span>
+          </div>
+          <div class="slide-text-container">
+            <h2 class="slide-text-main" data-i18n="slide1_main">
+              Apps mbalimbali<br />zinapatikana..
+            </h2>
+            <p class="slide-text-highlight" data-i18n="slide1_sub">
+              ndani ya Super App yako
+            </p>
           </div>
         </div>
-      </div>
-    </header>
 
-    <main class="slider-container" id="sliderContainer">
-      <!-- Slide 1 -->
-      <div class="slide active" id="slide1">
-        <div class="slide-img-wrapper">
-          <!-- Using placeholder if exact image isn't available, but structured to accept it -->
-          <img
-            src="slider-img-1.png"
-            alt="Woman using Super App"
-            class="slide-img"
-            onerror="
-              this.src =
-                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+1'
-            "
-          />
-        </div>
-        <div class="slide-text-container">
-          <h2 class="slide-text-main" data-i18n="slide1_main">
-            Apps mbalimbali<br />zinapatikana..
-          </h2>
-          <p class="slide-text-highlight" data-i18n="slide1_sub">
-            ndani ya Super App yako
-          </p>
-        </div>
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="slide" id="slide2">
-        <div class="slide-img-wrapper">
-          <img
-            src="slider-img-2.png"
-            alt="Woman smiling at phone"
-            class="slide-img"
-            onerror="
-              this.src =
-                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+2'
-            "
-          />
-        </div>
-        <div class="slide-text-container">
-          <h2 class="slide-text-main" data-i18n="slide2_main">
-            Huduma za kifedha Halal..
-          </h2>
-          <p class="slide-text-highlight" data-i18n="slide2_sub">
-            ndani ya Super App yako
-          </p>
-        </div>
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="slide" id="slide3">
-        <div class="slide-img-wrapper">
-          <!-- Removed inline styles and added img-tight-crop class -->
-          <img
-            src="slider-img-3.png"
-            alt="Habari"
-            class="slide-img img-tight-crop"
-            onerror="
-              this.src =
-                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+3'
-            "
-          />
-        </div>
-        <div class="slide-text-container">
-          <h2 class="slide-text-main">Habari na Burudani..</h2>
-          <p class="slide-text-highlight">ndani ya Super App yako</p>
-        </div>
-      </div>
-
-      <!-- Slide 4 -->
-      <div class="slide" id="slide4">
-        <div class="slide-img-wrapper">
-          <!-- Removed inline styles and added img-tight-crop class -->
-          <img
-            src="slider-img-4.png"
-            alt="Manunuzi"
-            class="slide-img img-tight-crop"
-            onerror="
-              this.src =
-                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+4'
-            "
-          />
-        </div>
-        <div class="slide-text-container">
-          <h2 class="slide-text-main">Manunuzi Rahisi..</h2>
-          <p class="slide-text-highlight">ndani ya Super App yako</p>
-        </div>
-      </div>
-
-      <!-- Slide 5 -->
-      <div class="slide" id="slide5">
-        <div class="slide-img-wrapper">
-          <!-- Removed inline styles -->
-          <img
-            src="slider-img-5.png"
-            alt="Marafiki"
-            class="slide-img"
-            onerror="
-              this.src =
-                'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+5'
-            "
-          />
-        </div>
-        <div class="slide-text-container">
-          <h2 class="slide-text-main">Ungana na Marafiki..</h2>
-          <p class="slide-text-highlight">ndani ya Super App yako</p>
-        </div>
-      </div>
-
-      <!-- Add more slides here if needed. The design shows 5 dots, so we create 5 total logically -->
-
-      <!-- Pagination Dots inside slider container to align with text -->
-      <div class="pagination" id="pagination">
-        <div class="dot active" data-index="0"></div>
-        <div class="dot" data-index="1"></div>
-        <div class="dot" data-index="2"></div>
-        <div class="dot" data-index="3"></div>
-        <div class="dot" data-index="4"></div>
-      </div>
-    </main>
-
-    <div class="bottom-sheet mt-auto">
-      <form id="phoneForm" onsubmit="event.preventDefault()">
-        <div class="phone-input-group">
-          <div class="country-code">
+        <!-- Slide 2 -->
+        <div class="slide" id="slide2">
+          <div class="slide-img-wrapper">
             <img
-              src="https://flagcdn.com/w40/tz.png"
-              alt="TZ Flag"
-              class="country-flag"
+              src="slider-img-2.png"
+              alt="Woman smiling at phone"
+              class="slide-img"
+              onerror="
+                this.src =
+                  'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+2'
+              "
             />
-            <span>+255</span>
           </div>
-          <input
-            type="tel"
-            id="phoneNumber"
-            class="phone-input"
-            placeholder="Ingiza namba ya simu!"
-            data-i18n-placeholder="phone_placeholder"
-            autocomplete="tel"
-          />
+          <div class="slide-text-container">
+            <h2 class="slide-text-main" data-i18n="slide2_main">
+              Huduma za kifedha Halal..
+            </h2>
+            <p class="slide-text-highlight" data-i18n="slide2_sub">
+              ndani ya Super App yako
+            </p>
+          </div>
         </div>
-        <button
-          type="button"
-          id="submitBtn"
-          class="submit-btn"
-          disabled
-          data-i18n="btn_continue"
-        >
-          Endelea
-        </button>
-      </form>
+
+        <!-- Slide 3 -->
+        <div class="slide" id="slide3">
+          <div class="slide-img-wrapper">
+            <!-- Removed inline styles and added img-tight-crop class -->
+            <img
+              src="slider-img-3.png"
+              alt="Habari"
+              class="slide-img img-tight-crop"
+              onerror="
+                this.src =
+                  'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+3'
+              "
+            />
+          </div>
+          <div class="slide-text-container">
+            <h2 class="slide-text-main">Habari na Burudani..</h2>
+            <p class="slide-text-highlight">ndani ya Super App yako</p>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" id="slide4">
+          <div class="slide-img-wrapper">
+            <!-- Removed inline styles and added img-tight-crop class -->
+            <img
+              src="slider-img-4.png"
+              alt="Manunuzi"
+              class="slide-img img-tight-crop"
+              onerror="
+                this.src =
+                  'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+4'
+              "
+            />
+          </div>
+          <div class="slide-text-container">
+            <h2 class="slide-text-main">Manunuzi Rahisi..</h2>
+            <p class="slide-text-highlight">ndani ya Super App yako</p>
+          </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" id="slide5">
+          <div class="slide-img-wrapper">
+            <!-- Removed inline styles -->
+            <img
+              src="slider-img-5.png"
+              alt="Marafiki"
+              class="slide-img"
+              onerror="
+                this.src =
+                  'https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+5'
+              "
+            />
+          </div>
+          <div class="slide-text-container">
+            <h2 class="slide-text-main">Ungana na Marafiki..</h2>
+            <p class="slide-text-highlight">ndani ya Super App yako</p>
+          </div>
+        </div>
+
+        <!-- Add more slides here if needed. The design shows 5 dots, so we create 5 total logically -->
+
+        <!-- Pagination Dots inside slider container to align with text -->
+        <div class="pagination" id="pagination">
+          <div class="dot active" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+          <div class="dot" data-index="2"></div>
+          <div class="dot" data-index="3"></div>
+          <div class="dot" data-index="4"></div>
+        </div>
+      </main>
+
+      <div class="bottom-sheet mt-auto">
+        <form id="phoneForm" onsubmit="event.preventDefault()">
+          <div class="phone-input-group">
+            <div class="country-code">
+              <img
+                src="https://flagcdn.com/w40/tz.png"
+                alt="TZ Flag"
+                class="country-flag"
+              />
+              <span>+255</span>
+            </div>
+            <input
+              type="tel"
+              id="phoneNumber"
+              class="phone-input"
+              placeholder="Ingiza namba ya simu!"
+              data-i18n-placeholder="phone_placeholder"
+              autocomplete="tel"
+            />
+          </div>
+          <button
+            type="button"
+            id="submitBtn"
+            class="submit-btn"
+            disabled
+            data-i18n="btn_continue"
+          >
+            Endelea
+          </button>
+        </form>
+      </div>
     </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        const splashScreen = document.getElementById("splash-screen");
+        const mainContent = document.getElementById("main-content");
+
+        // Wait for 2 seconds, then transition to main content
+        setTimeout(() => {
+          splashScreen.style.opacity = "0";
+          mainContent.classList.remove("opacity-0");
+          mainContent.classList.add("opacity-100");
+
+          // Remove splash screen from DOM after fade out completes
+          setTimeout(() => {
+            if (splashScreen.parentNode) {
+              splashScreen.parentNode.removeChild(splashScreen);
+            }
+          }, 500);
+        }, 2000);
         // --- Elements ---
         const phoneInput = document.getElementById("phoneNumber");
         const submitBtn = document.getElementById("submitBtn");
