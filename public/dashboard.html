@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -181,4 +182,189 @@ function logout() {
 </script>
 
 </body>
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .status-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .box {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .approved { background: #28a745; color: white; }
+        .pending { background: #ffc107; color: black; }
+        .rejected { background: #dc3545; color: white; }
+
+        .warning {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .action-btn {
+            margin-top: 12px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            background: #1e63c6;
+            color: white;
+            font-size: 14px;
+        }
+
+        .hidden-box {
+            display: none;
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .review {
+            border-bottom: 1px solid #eee;
+            padding: 6px 0;
+        }
+
+        .ref-box {
+            background: #eef4ff;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .ref-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #1e63c6;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2 class="title">Loan Status</h2>
+
+    <!-- STATUS BOXES -->
+    <div class="status-box">
+        <div class="box approved">APPROVED</div>
+        <div class="box pending">PENDING ✔</div>
+        <div class="box rejected">REJECTED</div>
+    </div>
+
+    <!-- WARNING -->
+    <div class="warning">
+        ⚠️ If repayment exceeds the agreed period, interest will increase to <strong>15%</strong>.
+    </div>
+
+    <!-- REFERRAL -->
+    <div class="ref-box">
+        <strong>Referral Program</strong>
+        <p style="margin-top:8px;">
+            Use the referral link below to invite more applications which will make your loan be initiated more quickly.
+        </p>
+
+        <div class="ref-link">
+            <span id="refLink">https://ecocash-loan-app.onrender.com</span>
+            <button class="copy-btn" onclick="copyLink()">Copy</button>
+        </div>
+    </div>
+
+    <!-- REVIEWS BUTTON -->
+    <button class="action-btn" onclick="toggleReviews()">Customer Reviews</button>
+
+    <div id="reviewsBox" class="hidden-box">
+        <div class="review">⭐ Tendai M: "Got my loan quickly, very reliable!"</div>
+        <div class="review">⭐ Nyasha K: "Easy process and fast approval."</div>
+        <div class="review">⭐ Blessing T: "Helped me during emergencies."</div>
+        <div class="review">⭐ Tafadzwa C: "Simple and smooth experience."</div>
+        <div class="review">⭐ Rutendo P: "Highly recommend this service."</div>
+        <div class="review">⭐ Farai D: "Fast response and helpful support."</div>
+        <div class="review">⭐ Simba L: "Very trustworthy platform."</div>
+        <div class="review">⭐ Chipo N: "Loan came right on time."</div>
+        <div class="review">⭐ Kelvin M: "Good service overall."</div>
+        <div class="review">⭐ Tariro S: "Will definitely use again."</div>
+    </div>
+
+    <!-- TERMS BUTTON -->
+    <button class="action-btn" onclick="toggleTerms()">Terms & Policies</button>
+
+    <div id="termsBox" class="hidden-box">
+        • Loans must be repaid within the agreed duration.<br>
+        • Late repayment attracts additional interest.<br>
+        • Providing false information may lead to rejection.<br>
+        • The platform reserves the right to approve or decline applications.
+    </div>
+
+    <button onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add("loaded");
+});
+
+function toggleReviews() {
+    const box = document.getElementById("reviewsBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function toggleTerms() {
+    const box = document.getElementById("termsBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function copyLink() {
+    const text = document.getElementById("refLink").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Link copied!");
+}
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
 </html>
