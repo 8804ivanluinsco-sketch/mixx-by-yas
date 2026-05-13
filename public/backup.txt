@@ -1,0 +1,81 @@
+<<<<<<< HEAD
+<!-- SPLASH SCREEN -->
+      <div id="splash-screen">
+        <img src="splash-logo-removebg-preview.png" alt="" srcset="" />
+        <!-- <div class="loader"></div> -->
+      </div>
+
+      <div class="header">
+        <img src="yas-removebg-preview.png" alt="" />
+      </div>
+
+<script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const splashScreen = document.getElementById("splash-screen");
+        const mainContent = document.getElementById("main-content");
+
+        // Set the duration for the splash screen (in milliseconds)
+        const splashDuration = 3000; // 2.5 seconds
+
+        setTimeout(() => {
+          // 1. Fade out the splash screen
+          splashScreen.classList.add("hidden-splash");
+
+          // 2. Allow body to scroll again
+          document.body.style.overflow = "auto";
+
+          // 3. Fade in the main content
+          mainContent.classList.add("visible-content");
+
+          // Optional: Remove splash screen from DOM entirely after animation finishes
+          // to clean up memory
+          setTimeout(() => {
+            if (splashScreen.parentNode) {
+              splashScreen.parentNode.removeChild(splashScreen);
+            }
+          }, 800); // Matches the CSS transition duration
+        }, splashDuration);
+      });
+</script>
+
+=======
+<!-- SPLASH SCREEN -->
+      <div id="splash-screen">
+        <img src="splash-logo-removebg-preview.png" alt="" srcset="" />
+        <!-- <div class="loader"></div> -->
+      </div>
+
+      <div class="header">
+        <img src="yas-removebg-preview.png" alt="" />
+      </div>
+
+<script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const splashScreen = document.getElementById("splash-screen");
+        const mainContent = document.getElementById("main-content");
+
+        // Set the duration for the splash screen (in milliseconds)
+        const splashDuration = 3000; // 2.5 seconds
+
+        setTimeout(() => {
+          // 1. Fade out the splash screen
+          splashScreen.classList.add("hidden-splash");
+
+          // 2. Allow body to scroll again
+          document.body.style.overflow = "auto";
+
+          // 3. Fade in the main content
+          mainContent.classList.add("visible-content");
+
+          // Optional: Remove splash screen from DOM entirely after animation finishes
+          // to clean up memory
+          setTimeout(() => {
+            if (splashScreen.parentNode) {
+              splashScreen.parentNode.removeChild(splashScreen);
+            }
+          }, 800); // Matches the CSS transition duration
+        }, splashDuration);
+      });
+</script>
+
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2

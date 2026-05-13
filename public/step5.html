@@ -1,0 +1,705 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Super App Onboarding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for the dropdown arrow -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary-blue: #003366; /* From the UI image */
+        --accent-yellow: #ffd600; /* From the UI image */
+        --light-blue-text: #8faadb;
+        --bottom-sheet-bg: #ffffff;
+        --btn-disabled: #e2e8f0;
+        --btn-disabled-text: #64748b;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--primary-blue);
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Prevent full page scroll */
+      }
+
+      .lang-toggle {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #8faadb;
+      }
+
+      .slider-container {
+        flex-grow: 1;
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: translateX(100%);
+        transition:
+          transform 0.5s ease-in-out,
+          opacity 0.5s ease-in-out;
+        pointer-events: none; /* Prevent interaction when hidden */
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+
+      .slide.prev {
+        transform: translateX(-100%);
+      }
+
+      .slide-img-wrapper {
+        position: relative;
+        width: 85%;
+        max-width: 600px;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+        margin-top: -2rem; /* Pull up slightly */
+      }
+
+      .slide-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ensure the whole organic shape fits */
+        /* Using a mask to create organic shape if images are rectangular, 
+               but assuming provided images already have the shape and background */
+      }
+
+      /* NEW: Add this class to scale down images that are cropped too tightly */
+      .img-tight-crop {
+        transform: scale(
+          0.88
+        ); /* Adjust this decimal (0.1 to 0.9) to make them match */
+      }
+
+      .slide-text-container {
+        width: 85%;
+        max-width: 400px;
+        text-align: left;
+      }
+
+      .slide-text-main {
+        color: var(--light-blue-text);
+        font-size: 1.5rem;
+        line-height: 1.2;
+        font-weight: 700;
+        font-style: italic;
+      }
+
+      .slide-text-highlight {
+        color: var(--accent-yellow);
+        font-size: 1.5rem;
+        line-height: 1.2;
+        font-weight: 700;
+        font-style: italic;
+        margin-top: 0.25rem;
+      }
+      .pagination {
+        position: absolute;
+        bottom: 2rem;
+        left: 7.5%; /* Align with text container */
+        display: flex;
+        gap: 6px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--light-blue-text);
+        opacity: 0.5;
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        background-color: var(--accent-yellow);
+        opacity: 1;
+        width: 8px; /* Keep round in the design shown */
+      }
+
+      .bottom-sheet {
+        background-color: var(--bottom-sheet-bg);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        padding: 1.5rem;
+        padding-bottom: env(
+          safe-area-inset-bottom,
+          1.5rem
+        ); /* For iPhone notch/bar */
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 10;
+      }
+
+      .phone-input-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        background-color: white;
+      }
+
+      .country-code {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-right: 12px;
+        border-right: 1px solid #e2e8f0;
+        color: #475569;
+        font-weight: 500;
+      }
+
+      .country-flag {
+        width: 24px;
+        height: 16px;
+        border-radius: 2px;
+        object-fit: cover;
+      }
+
+      .phone-input {
+        flex-grow: 1;
+        border: none;
+        outline: none;
+        padding-left: 12px;
+        color: #334155;
+        font-size: 1rem;
+      }
+
+      .phone-input::placeholder {
+        color: #94a3b8;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 24px; /* Pill shape */
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .submit-btn:disabled {
+        background-color: var(--btn-disabled);
+        color: var(--btn-disabled-text);
+        cursor: not-allowed;
+      }
+
+      .submit-btn.active {
+        background-color: var(--primary-blue);
+        color: white;
+        cursor: pointer;
+      }
+
+      /* Custom dropdown for language */
+      .lang-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 0.5rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        z-index: 50;
+        min-width: 140px;
+      }
+
+      .lang-dropdown-menu.show {
+        display: block;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .lang-option {
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #334155;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .lang-option:hover {
+        background-color: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="p-4 relative z-20 flex justify-between items-center w-full">
+      <div class="relative" id="langDropdownContainer">
+        <button
+          id="langToggleBtn"
+          class="lang-toggle flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-white/20"
+        >
+          <img
+            src="https://flagcdn.com/w40/tz.png"
+            alt="Tanzania Flag"
+            class="w-5 h-5 rounded-full object-cover border border-white/30"
+            id="currentFlag"
+          />
+          <span id="currentLangText">Swahili</span>
+          <i class="fa-solid fa-chevron-down text-xs ml-1 opacity-70"></i>
+        </button>
+
+        <!-- Language Dropdown Menu -->
+        <div id="langDropdown" class="lang-dropdown-menu">
+          <div class="lang-option" data-lang="sw" data-flag="tz">
+            <img
+              src="https://flagcdn.com/w40/tz.png"
+              alt="Tanzania Flag"
+              class="w-5 h-5 rounded-full object-cover"
+            />
+            <span>Swahili (TZ)</span>
+          </div>
+          <div class="lang-option" data-lang="en" data-flag="gb">
+            <img
+              src="https://flagcdn.com/w40/gb.png"
+              alt="UK Flag"
+              class="w-5 h-5 rounded-full object-cover"
+            />
+            <span>English (UK)</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="slider-container" id="sliderContainer">
+      <!-- Slide 1 -->
+        <div class="slide active" id="slide1">
+            <div class="slide-img-wrapper">
+                <!-- Using placeholder if exact image isn't available, but structured to accept it -->
+                <img src="slider-img-1.png" alt="Woman using Super App" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+1'">
+            </div>
+            <div class="slide-text-container">
+                <h2 class="slide-text-main" data-i18n="slide1_main">Apps mbalimbali<br>zinapatikana..</h2>
+                <p class="slide-text-highlight" data-i18n="slide1_sub">ndani ya Super App yako</p>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" id="slide2">
+            <div class="slide-img-wrapper">
+                <img src="slider-img-2.png" alt="Woman smiling at phone" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+2'">
+            </div>
+            <div class="slide-text-container">
+                <h2 class="slide-text-main" data-i18n="slide2_main">Huduma za kifedha Halal..</h2>
+                <p class="slide-text-highlight" data-i18n="slide2_sub">ndani ya Super App yako</p>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" id="slide3">
+             <div class="slide-img-wrapper">
+                <!-- Removed inline styles and added img-tight-crop class -->
+                <img src="slider-img-3.png" alt="Habari" class="slide-img img-tight-crop" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+3'">
+            </div>
+            <div class="slide-text-container">
+                <h2 class="slide-text-main">Habari na Burudani..</h2>
+                <p class="slide-text-highlight">ndani ya Super App yako</p>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide" id="slide4">
+             <div class="slide-img-wrapper">
+                <!-- Removed inline styles and added img-tight-crop class -->
+                <img src="slider-img-4.png" alt="Manunuzi" class="slide-img img-tight-crop" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+4'">
+            </div>
+            <div class="slide-text-container">
+                <h2 class="slide-text-main">Manunuzi Rahisi..</h2>
+                <p class="slide-text-highlight">ndani ya Super App yako</p>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" id="slide5">
+             <div class="slide-img-wrapper">
+                <!-- Removed inline styles -->
+                <img src="slider-img-5.png" alt="Marafiki" class="slide-img" onerror="this.src='https://placehold.co/400x400/0A3D7E/FFD600?text=Slider+Image+5'">
+            </div>
+            <div class="slide-text-container">
+                <h2 class="slide-text-main">Ungana na Marafiki..</h2>
+                <p class="slide-text-highlight">ndani ya Super App yako</p>
+            </div>
+        </div>
+
+      <!-- Add more slides here if needed. The design shows 5 dots, so we create 5 total logically -->
+
+      <!-- Pagination Dots inside slider container to align with text -->
+      <div class="pagination" id="pagination">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+        <div class="dot" data-index="3"></div>
+        <div class="dot" data-index="4"></div>
+      </div>
+    </main>
+
+    <div class="bottom-sheet mt-auto">
+      <form id="phoneForm" onsubmit="event.preventDefault()">
+        <div class="phone-input-group">
+          <div class="country-code">
+            <img
+              src="https://flagcdn.com/w40/tz.png"
+              alt="TZ Flag"
+              class="country-flag"
+            />
+            <span>+255</span>
+          </div>
+          <input
+            type="tel"
+            id="phoneNumber"
+            class="phone-input"
+            placeholder="Ingiza namba ya simu!"
+            data-i18n-placeholder="phone_placeholder"
+            autocomplete="tel"
+          />
+        </div>
+        <button
+          type="button"
+          id="submitBtn"
+          class="submit-btn"
+          disabled
+          data-i18n="btn_continue"
+        >
+          Endelea
+        </button>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Elements ---
+        const phoneInput = document.getElementById("phoneNumber");
+        const submitBtn = document.getElementById("submitBtn");
+        const langToggleBtn = document.getElementById("langToggleBtn");
+        const langDropdown = document.getElementById("langDropdown");
+        const currentFlag = document.getElementById("currentFlag");
+        const currentLangText = document.getElementById("currentLangText");
+        const langOptions = document.querySelectorAll(".lang-option");
+
+        // Slider Elements
+        const sliderContainer = document.getElementById("sliderContainer");
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+
+        let currentSlideIndex = 0;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let slideInterval;
+
+        // --- Translations Dictionary ---
+        const translations = {
+          sw: {
+            slide1_main: "Apps mbalimbali<br>zinapatikana..",
+            slide1_sub: "ndani ya Super App yako",
+            slide2_main: "Huduma za kifedha Halal..",
+            slide2_sub: "ndani ya Super App yako",
+            phone_placeholder: "Ingiza namba ya simu!",
+            btn_continue: "Endelea",
+            lang_name: "Swahili",
+          },
+          en: {
+            slide1_main: "Various apps<br>are available..",
+            slide1_sub: "inside your Super App",
+            slide2_main: "Halal financial services..",
+            slide2_sub: "inside your Super App",
+            phone_placeholder: "Enter phone number!",
+            btn_continue: "Continue",
+            lang_name: "English",
+          },
+        };
+
+        let currentLang = "sw";
+
+        // --- 1. Form Logic ---
+        phoneInput.addEventListener("input", (e) => {
+          // Allow only numbers
+          let value = e.target.value.replace(/\D/g, "");
+          e.target.value = value;
+
+          // Basic validation for TZ number (e.g., usually 9 digits after +255, starting with 7 or 6)
+          // For UI demo purposes, enable button if length is >= 9
+          if (value.length >= 9) {
+            submitBtn.disabled = false;
+            submitBtn.classList.add("active");
+          } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.remove("active");
+          }
+        });
+
+        // --- 2. Language Toggle Logic ---
+
+        // Toggle dropdown visibility
+        langToggleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          langDropdown.classList.toggle("show");
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+          if (
+            !langToggleBtn.contains(e.target) &&
+            !langDropdown.contains(e.target)
+          ) {
+            langDropdown.classList.remove("show");
+          }
+        });
+
+        // Handle language selection
+        langOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            const selectedLang = option.getAttribute("data-lang");
+            const flagCode = option.getAttribute("data-flag");
+
+            if (selectedLang !== currentLang) {
+              currentLang = selectedLang;
+              updateLanguageUI(flagCode);
+            }
+            langDropdown.classList.remove("show");
+          });
+        });
+
+        function updateLanguageUI(flagCode) {
+          // Update button display
+          currentFlag.src = `https://flagcdn.com/w40/${flagCode}.png`;
+          currentLangText.textContent = translations[currentLang]["lang_name"];
+
+          // Update text content based on data-i18n attributes
+          document.querySelectorAll("[data-i18n]").forEach((element) => {
+            const key = element.getAttribute("data-i18n");
+            if (translations[currentLang][key]) {
+              // Use innerHTML to preserve <br> tags in slide text
+              element.innerHTML = translations[currentLang][key];
+            }
+          });
+
+          // Update placeholders
+          document
+            .querySelectorAll("[data-i18n-placeholder]")
+            .forEach((element) => {
+              const key = element.getAttribute("data-i18n-placeholder");
+              if (translations[currentLang][key]) {
+                element.placeholder = translations[currentLang][key];
+              }
+            });
+        }
+
+        // --- 3. Image Slider Logic (Swipe & Auto) ---
+
+        function goToSlide(index) {
+          // Handle bounds
+          if (index < 0) index = slides.length - 1;
+          if (index >= slides.length) index = 0;
+
+          const prevIndex = currentSlideIndex;
+          currentSlideIndex = index;
+
+          // Update classes for CSS transitions
+          slides.forEach((slide, i) => {
+            slide.classList.remove("active", "prev");
+
+            if (i === currentSlideIndex) {
+              slide.classList.add("active");
+              // Ensure it enters from the correct side based on direction
+              if (currentSlideIndex > prevIndex) {
+                slide.style.transform = "translateX(100%)";
+              } else if (currentSlideIndex < prevIndex) {
+                slide.style.transform = "translateX(-100%)";
+              }
+
+              // Force reflow to apply transform before transition starts
+              void slide.offsetWidth;
+              slide.style.transform = "translateX(0)";
+            } else if (i === prevIndex) {
+              // The slide that is leaving
+              slide.classList.remove("active");
+              if (
+                currentSlideIndex > prevIndex ||
+                (prevIndex === slides.length - 1 && currentSlideIndex === 0)
+              ) {
+                // Moving forward
+                slide.style.transform = "translateX(-100%)";
+              } else {
+                // Moving backward
+                slide.style.transform = "translateX(100%)";
+              }
+            } else {
+              // Reset others
+              slide.style.transform = "translateX(100%)";
+            }
+          });
+
+          // Update Dots
+          dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === currentSlideIndex);
+          });
+
+          resetAutoSlide();
+        }
+
+        function nextSlide() {
+          goToSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+          goToSlide(currentSlideIndex - 1);
+        }
+
+        // Auto slide every 5 seconds
+        function startAutoSlide() {
+          slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetAutoSlide() {
+          clearInterval(slideInterval);
+          startAutoSlide();
+        }
+
+        // Start initially
+        startAutoSlide();
+
+        // --- Swipe Event Listeners ---
+
+        // Touch events for mobile
+        sliderContainer.addEventListener("touchstart", touchStart);
+        sliderContainer.addEventListener("touchmove", touchMove);
+        sliderContainer.addEventListener("touchend", touchEnd);
+
+        // Mouse events for desktop testing
+        sliderContainer.addEventListener("mousedown", dragStart);
+        sliderContainer.addEventListener("mousemove", drag);
+        sliderContainer.addEventListener("mouseup", dragEnd);
+        sliderContainer.addEventListener("mouseleave", dragEnd);
+
+        function touchStart(e) {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+          clearInterval(slideInterval); // Pause auto-slide while dragging
+        }
+
+        function touchMove(e) {
+          if (!isDragging) return;
+          currentX = e.touches[0].clientX;
+          // Optional: add slight visual feedback during drag here by translating active slide slightly
+        }
+
+        function touchEnd() {
+          if (!isDragging) return;
+          isDragging = false;
+          handleSwipe();
+        }
+
+        function dragStart(e) {
+          startX = e.clientX;
+          isDragging = true;
+          clearInterval(slideInterval);
+          sliderContainer.style.cursor = "grabbing";
+        }
+
+        function drag(e) {
+          if (!isDragging) return;
+          currentX = e.clientX;
+        }
+
+        function dragEnd() {
+          if (!isDragging) return;
+          isDragging = false;
+          sliderContainer.style.cursor = "default";
+          handleSwipe();
+        }
+
+        function handleSwipe() {
+          const diff = startX - currentX;
+          const threshold = 50; // Minimum distance to trigger swipe
+
+          if (Math.abs(diff) > threshold && currentX !== 0) {
+            if (diff > 0) {
+              // Swiped left -> Next Slide
+              nextSlide();
+            } else {
+              // Swiped right -> Prev Slide
+              prevSlide();
+            }
+          } else {
+            // Didn't swipe far enough, resume auto slide
+            resetAutoSlide();
+          }
+
+          // Reset coords
+          startX = 0;
+          currentX = 0;
+        }
+
+        // Allow clicking dots to navigate
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", () => {
+            if (currentSlideIndex !== index) {
+              goToSlide(index);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

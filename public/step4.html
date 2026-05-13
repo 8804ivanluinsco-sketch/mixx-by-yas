@@ -1,0 +1,140 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Confirm Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- 🔵 TOP -->
+<div class="header"></div>
+
+<!-- ⚪ CENTER CARD -->
+<div class="container">
+
+    <h2 class="title">Confirm Details</h2>
+
+    <div class="summary" style="text-align:left; margin-top:20px;"></div>
+        <p><strong>Amount:</strong> <span id="amountText"></span></p>
+        <p><strong>Duration:</strong> <span id="durationText"></span></p>
+        <p><strong>Reason:</strong> <span id="reason"></span></p>
+
+        <p><strong>Name:</strong> <span id="name"></span></p>
+        <p><strong>Phone:</strong> <span id="phone"></span></p>
+        <p><strong>Next of Kin:</strong> <span id="kin"></span></p>
+    </div>
+
+        <button onclick="nextStep4()">Next</button>
+
+</div>
+
+<!-- 🔵 BOTTOM -->
+<div class="footer"></div>
+
+<script src="script.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("name").innerText = localStorage.getItem("fullName");
+});
+
+   document.getElementById("amountText").innerText =
+    "$" + (localStorage.getItem("amount") || "-");
+
+document.getElementById("durationText").innerText =
+    (localStorage.getItem("duration") || "-") + " days"; 
+
+    document.getElementById("reason").innerText =
+        localStorage.getItem("reason") || "-";
+
+    document.getElementById("kin").innerText =
+    (localStorage.getItem("kfname") || "") + " " +
+    (localStorage.getItem("klname") || "") +
+    " (" + (localStorage.getItem("kphone") || "-") + ")";
+
+    document.getElementById("phone").innerText =
+        localStorage.getItem("phone") || "-";
+
+    document.getElementById("kin").innerText =
+        localStorage.getItem("kfname") || "-";
+});
+
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Confirm Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- 🔵 TOP -->
+<div class="header"></div>
+
+<!-- ⚪ CENTER CARD -->
+<div class="container">
+
+    <h2 class="title">Confirm Details</h2>
+
+    <div class="summary" style="text-align:left; margin-top:20px;"></div>
+        <p><strong>Amount:</strong> <span id="amountText"></span></p>
+        <p><strong>Duration:</strong> <span id="durationText"></span></p>
+        <p><strong>Reason:</strong> <span id="reason"></span></p>
+
+        <p><strong>Name:</strong> <span id="name"></span></p>
+        <p><strong>Phone:</strong> <span id="phone"></span></p>
+        <p><strong>Next of Kin:</strong> <span id="kin"></span></p>
+    </div>
+
+        <button onclick="nextStep4()">Next</button>
+
+</div>
+
+<!-- 🔵 BOTTOM -->
+<div class="footer"></div>
+
+<script src="script.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("name").innerText = localStorage.getItem("fullName");
+});
+
+   document.getElementById("amountText").innerText =
+    "$" + (localStorage.getItem("amount") || "-");
+
+document.getElementById("durationText").innerText =
+    (localStorage.getItem("duration") || "-") + " days"; 
+
+    document.getElementById("reason").innerText =
+        localStorage.getItem("reason") || "-";
+
+    document.getElementById("kin").innerText =
+    (localStorage.getItem("kfname") || "") + " " +
+    (localStorage.getItem("klname") || "") +
+    " (" + (localStorage.getItem("kphone") || "-") + ")";
+
+    document.getElementById("phone").innerText =
+        localStorage.getItem("phone") || "-";
+
+    document.getElementById("kin").innerText =
+        localStorage.getItem("kfname") || "-";
+});
+
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
+</html>

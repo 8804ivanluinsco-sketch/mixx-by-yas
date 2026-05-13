@@ -1,0 +1,26 @@
+<<<<<<< HEAD
+{
+  "name": "ecocash-loan-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  }
+=======
+{
+  "name": "ecocash-loan-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  }
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
+}

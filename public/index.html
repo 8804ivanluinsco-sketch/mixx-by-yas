@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Step 1</title>
+
+    <!-- ✅ MOBILE FIX -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <!-- ✅ CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  </head>
+
+  <body>
+    
+
+    <div class="main-content">
+      <!-- 🔵 TOP -->
+      <div class="header">
+        <img src="yas-removebg-preview.png" alt="" />
+      </div>
+
+      <!-- ⚪ CENTER CARD -->
+      <div class="container">
+        <h2 class="title">Loan Details</h2>
+
+        <label>Amount ($100 - $1000)</label>
+        <input type="range" min="100" max="1000" id="amount" class="slider" />
+        <p id="amountVal"></p>
+
+        <label>Duration (14 - 120 days)</label>
+        <input type="range" min="14" max="120" id="duration" class="slider" />
+        <p id="durationVal"></p>
+        <p id="repayment"></p>
+
+        <textarea
+          id="reason"
+          placeholder="Enter reason for loan (e.g. business, school fees)"
+        ></textarea>
+
+        <button onclick="nextStep1()">Next</button>
+      </div>
+
+      <!-- 🔵 BOTTOM -->
+      <div class="footer"></div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.classList.add("loaded");
+      });
+    </script>
+
+    <script>
+      function showLoaderAndGo(url) {
+        document.getElementById("pageLoader").style.display = "block";
+        setTimeout(() => {
+          window.location.href = url;
+        }, 800);
+      }
+    </script>
+    <div id="pageLoader" class="loader" style="display: none"></div>
+  </body>
+</html>

