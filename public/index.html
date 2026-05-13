@@ -281,7 +281,7 @@
                 Kwa kubofya "Tuma Ombi", unakubali vigezo na masharti ya mikopo yetu.
             </p>
 
-            <button onclick="stepFive"><a href="step5.html" style="color: var(--bg-light)">Endelea</a></button>
+            <button onclick="stepFive" id="step5Button"><a href="step5.html" style="color: var(--bg-light)">Endelea</a></button>
             <button onclick="goToStep(3)" style="background:none; color:#64748b; margin-top:0;">Rudi Nyuma</button>
         </div>
 
@@ -309,9 +309,9 @@
             window.scrollTo(0,0);
         }
 
-        function stepFive() {
+        document.getElementById('step5Button').addEventListener('click', function() {
             window.location.href = "step5.html";
-        }
+        });
 
         function hideError() {
             document.getElementById('errorBox').style.display = 'none';
