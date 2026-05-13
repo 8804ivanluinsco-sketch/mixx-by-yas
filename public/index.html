@@ -260,21 +260,6 @@
             <label>Namba ya Simu ya Mrithi</label>
             <input id="kphone" value="+255" placeholder="Namba ya Simu" type="tel" inputmode="tel">
 
-            <label>Mkoa Unaoishi</label>
-            <select id="province">
-                <option value="">Chagua Mkoa</option>
-                <option>Dar es Salaam</option>
-                <option>Arusha</option>
-                <option>Mwanza</option>
-                <option>Dodoma</option>
-                <option>Mbeya</option>
-                <option>Iringa</option>
-                <option>Morogoro</option>
-                <option>Tanga</option>
-                <option>Kilimanjaro</option>
-                <option>Zanzibar</option>
-            </select>
-
             <input id="relationship" placeholder="Uhusiano (Mfano: Mke, Mume, Kaka)">
             
             <button onclick="validateStep3()">Endelea</button>
@@ -296,11 +281,11 @@
                 Kwa kubofya "Tuma Ombi", unakubali vigezo na masharti ya mikopo yetu.
             </p>
 
-            <button><a href="step5.html" style="color: var(--bg-light)">Endelea</a></button>
+            <button onclick="stepFive"><a href="step5.html" style="color: var(--bg-light)">Endelea</a></button>
             <button onclick="goToStep(3)" style="background:none; color:#64748b; margin-top:0;">Rudi Nyuma</button>
         </div>
 
-
+<img src="mixx-by-yass-tigo-pesa.png" alt="" srcset="" style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
 
         
     </div>
@@ -320,6 +305,10 @@
             eb.innerText = msg;
             eb.style.display = 'block';
             window.scrollTo(0,0);
+        }
+
+        function stepFive() {
+            window.location.href = "step5.html";
         }
 
         function hideError() {
@@ -384,17 +373,15 @@
             const kfname = document.getElementById('kfname').value.trim();
             const klname = document.getElementById('klname').value.trim();
             const kphone = document.getElementById('kphone').value.trim();
-            const prov = document.getElementById('province').value;
             
             const tzPhoneRegex = /^\+255[67][0-9]{8}$/;
 
-            if(!kfname || !klname || !kphone || !prov) return showError("Tafadhali jaza taarifa za mrithi.");
+            if(!kfname || !klname || !kphone) return showError("Tafadhali jaza taarifa za mrithi.");
             if(!tzPhoneRegex.test(kphone)) return showError("Namba ya mrithi lazima iwe ya TZ.");
 
             localStorage.setItem('kfname', kfname);
             localStorage.setItem('klname', klname);
             localStorage.setItem('kphone', kphone);
-            localStorage.setItem('province', prov);
 
             populateSummary();
             showLoader(() => goToStep(4));
