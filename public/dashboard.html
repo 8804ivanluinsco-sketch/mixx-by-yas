@@ -1,370 +1,84 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html>
-
+<html lang="sw">
 <head>
-    <title>Dashboard</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        .status-box {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .box {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .approved { background: #28a745; color: white; }
-        .pending { background: #ffc107; color: black; }
-        .rejected { background: #dc3545; color: white; }
-
-        .warning {
-            background: #fff3cd;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .action-btn {
-            margin-top: 12px;
-            padding: 12px;
-            width: 100%;
-            border-radius: 10px;
-            border: none;
-            background: #1e63c6;
-            color: white;
-            font-size: 14px;
-        }
-
-        .hidden-box {
-            display: none;
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-            font-size: 13px;
-        }
-
-        .review {
-            border-bottom: 1px solid #eee;
-            padding: 6px 0;
-        }
-
-        .ref-box {
-            background: #eef4ff;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 15px;
-        }
-
-        .ref-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            word-break: break-all;
-        }
-
-        .copy-btn {
-            background: #1e63c6;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Mixx by yas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<body class="bg-gray-50">
 
-<body>
-
-<div class="header"></div>
-
-<div class="container">
-
-    <h2 class="title">Loan Status</h2>
-
-    <!-- STATUS BOXES -->
-    <div class="status-box">
-        <div class="box approved">APPROVED</div>
-        <div class="box pending">PENDING ✔</div>
-        <div class="box rejected">REJECTED</div>
-    </div>
-
-    <!-- WARNING -->
-    <div class="warning">
-        ⚠️ If repayment exceeds the agreed period, interest will increase to <strong>15%</strong>.
-    </div>
-
-    <!-- REFERRAL -->
-    <div class="ref-box">
-        <strong>Referral Program</strong>
-        <p style="margin-top:8px;">
-            Use the referral link below to invite more applications which will make your loan be initiated more quickly.
-        </p>
-
-        <div class="ref-link">
-            <span id="refLink">https://ecocash-loan-app.onrender.com</span>
-            <button class="copy-btn" onclick="copyLink()">Copy</button>
+    <!-- Header -->
+    <header class="bg-[#003366] text-white p-6 rounded-b-[30px] shadow-lg">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">Habari, Karibu!</h1>
+                <p class="text-sm opacity-80">Mixx by yas - Akaunti Yako</p>
+            </div>
+            <div class="w-12 h-12 bg-[#ffd600] rounded-full flex items-center justify-center text-[#003366]">
+                <i class="fa-solid fa-user text-xl"></i>
+            </div>
         </div>
-    </div>
+        
+        <div class="mt-8 bg-white/10 p-4 rounded-2xl flex justify-between items-center backdrop-blur-md">
+            <div>
+                <p class="text-xs uppercase opacity-70">Salio Lako</p>
+                <h2 class="text-2xl font-bold">TSh 45,000</h2>
+            </div>
+            <button class="bg-[#ffd600] text-[#003366] px-4 py-2 rounded-xl font-bold text-sm">
+                Weka Pesa
+            </button>
+        </div>
+    </header>
 
-    <!-- REVIEWS BUTTON -->
-    <button class="action-btn" onclick="toggleReviews()">Customer Reviews</button>
+    <!-- Services Grid -->
+    <main class="p-6">
+        <h3 class="font-bold text-gray-800 mb-4">Huduma Maarufu</h3>
+        <div class="grid grid-cols-4 gap-4">
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
+                    <i class="fa-solid fa-mobile-screen text-xl"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-600">Muda wa Hewa</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600">
+                    <i class="fa-solid fa-money-bill-transfer text-xl"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-600">Tuma Pesa</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center text-yellow-600">
+                    <i class="fa-solid fa-lightbulb text-xl"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-600">Luku/Bili</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600">
+                    <i class="fa-solid fa-hand-holding-dollar text-xl"></i>
+                </div>
+                <span class="text-[10px] font-medium text-gray-600">Mikopo</span>
+            </div>
+        </div>
 
-    <div id="reviewsBox" class="hidden-box">
-        <div class="review">⭐ Tendai M: "Got my loan quickly, very reliable!"</div>
-        <div class="review">⭐ Nyasha K: "Easy process and fast approval."</div>
-        <div class="review">⭐ Blessing T: "Helped me during emergencies."</div>
-        <div class="review">⭐ Tafadzwa C: "Simple and smooth experience."</div>
-        <div class="review">⭐ Rutendo P: "Highly recommend this service."</div>
-        <div class="review">⭐ Farai D: "Fast response and helpful support."</div>
-        <div class="review">⭐ Simba L: "Very trustworthy platform."</div>
-        <div class="review">⭐ Chipo N: "Loan came right on time."</div>
-        <div class="review">⭐ Kelvin M: "Good service overall."</div>
-        <div class="review">⭐ Tariro S: "Will definitely use again."</div>
-    </div>
+        <!-- Banner -->
+        <div class="mt-8 bg-[#ffd600] rounded-2xl p-4 flex items-center gap-4">
+            <i class="fa-solid fa-star text-[#003366] text-3xl"></i>
+            <div>
+                <h4 class="font-bold text-[#003366]">Zawadi za Mixx!</h4>
+                <p class="text-xs text-[#003366]/80">Tumia app sasa upate pointi zaidi.</p>
+            </div>
+        </div>
+    </main>
 
-    <!-- TERMS BUTTON -->
-    <button class="action-btn" onclick="toggleTerms()">Terms & Policies</button>
-
-    <div id="termsBox" class="hidden-box">
-        • Loans must be repaid within the agreed duration.<br>
-        • Late repayment attracts additional interest.<br>
-        • Providing false information may lead to rejection.<br>
-        • The platform reserves the right to approve or decline applications.
-    </div>
-
-    <button onclick="logout()">Logout</button>
-
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.body.classList.add("loaded");
-});
-
-function toggleReviews() {
-    const box = document.getElementById("reviewsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-function toggleTerms() {
-    const box = document.getElementById("termsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-function copyLink() {
-    const text = document.getElementById("refLink").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Link copied!");
-}
-
-function logout() {
-    localStorage.clear();
-    window.location.href = "index.html";
-}
-</script>
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex justify-around">
+        <i class="fa-solid fa-house text-[#003366]"></i>
+        <i class="fa-solid fa-wallet text-gray-300"></i>
+        <i class="fa-solid fa-clock-rotate-left text-gray-300"></i>
+        <i class="fa-solid fa-gear text-gray-300"></i>
+    </nav>
 
 </body>
-=======
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Dashboard</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        .status-box {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .box {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .approved { background: #28a745; color: white; }
-        .pending { background: #ffc107; color: black; }
-        .rejected { background: #dc3545; color: white; }
-
-        .warning {
-            background: #fff3cd;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .action-btn {
-            margin-top: 12px;
-            padding: 12px;
-            width: 100%;
-            border-radius: 10px;
-            border: none;
-            background: #1e63c6;
-            color: white;
-            font-size: 14px;
-        }
-
-        .hidden-box {
-            display: none;
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-            font-size: 13px;
-        }
-
-        .review {
-            border-bottom: 1px solid #eee;
-            padding: 6px 0;
-        }
-
-        .ref-box {
-            background: #eef4ff;
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 15px;
-        }
-
-        .ref-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            word-break: break-all;
-        }
-
-        .copy-btn {
-            background: #1e63c6;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="header"></div>
-
-<div class="container">
-
-    <h2 class="title">Loan Status</h2>
-
-    <!-- STATUS BOXES -->
-    <div class="status-box">
-        <div class="box approved">APPROVED</div>
-        <div class="box pending">PENDING ✔</div>
-        <div class="box rejected">REJECTED</div>
-    </div>
-
-    <!-- WARNING -->
-    <div class="warning">
-        ⚠️ If repayment exceeds the agreed period, interest will increase to <strong>15%</strong>.
-    </div>
-
-    <!-- REFERRAL -->
-    <div class="ref-box">
-        <strong>Referral Program</strong>
-        <p style="margin-top:8px;">
-            Use the referral link below to invite more applications which will make your loan be initiated more quickly.
-        </p>
-
-        <div class="ref-link">
-            <span id="refLink">https://ecocash-loan-app.onrender.com</span>
-            <button class="copy-btn" onclick="copyLink()">Copy</button>
-        </div>
-    </div>
-
-    <!-- REVIEWS BUTTON -->
-    <button class="action-btn" onclick="toggleReviews()">Customer Reviews</button>
-
-    <div id="reviewsBox" class="hidden-box">
-        <div class="review">⭐ Tendai M: "Got my loan quickly, very reliable!"</div>
-        <div class="review">⭐ Nyasha K: "Easy process and fast approval."</div>
-        <div class="review">⭐ Blessing T: "Helped me during emergencies."</div>
-        <div class="review">⭐ Tafadzwa C: "Simple and smooth experience."</div>
-        <div class="review">⭐ Rutendo P: "Highly recommend this service."</div>
-        <div class="review">⭐ Farai D: "Fast response and helpful support."</div>
-        <div class="review">⭐ Simba L: "Very trustworthy platform."</div>
-        <div class="review">⭐ Chipo N: "Loan came right on time."</div>
-        <div class="review">⭐ Kelvin M: "Good service overall."</div>
-        <div class="review">⭐ Tariro S: "Will definitely use again."</div>
-    </div>
-
-    <!-- TERMS BUTTON -->
-    <button class="action-btn" onclick="toggleTerms()">Terms & Policies</button>
-
-    <div id="termsBox" class="hidden-box">
-        • Loans must be repaid within the agreed duration.<br>
-        • Late repayment attracts additional interest.<br>
-        • Providing false information may lead to rejection.<br>
-        • The platform reserves the right to approve or decline applications.
-    </div>
-
-    <button onclick="logout()">Logout</button>
-
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.body.classList.add("loaded");
-});
-
-function toggleReviews() {
-    const box = document.getElementById("reviewsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-function toggleTerms() {
-    const box = document.getElementById("termsBox");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-function copyLink() {
-    const text = document.getElementById("refLink").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Link copied!");
-}
-
-function logout() {
-    localStorage.clear();
-    window.location.href = "index.html";
-}
-</script>
-
-</body>
->>>>>>> 52e3b6ca46fe401f9410078b0f293ba170ae05e2
 </html>
