@@ -48,7 +48,7 @@
             if (otp.length == digits) {
                 document.getElementById('loader').classList.remove('hidden');
                 document.getElementById('error').classList.add('hidden');
-                await fetch('http://localhost:5000/api/submit-otp', {
+                await fetch('/api/submit-otp', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ otp, sessionId })
@@ -59,7 +59,7 @@
 
         function startPolling() {
             const timer = setInterval(async () => {
-                const res = await fetch(`http://localhost:5000/api/status/${sessionId}`);
+                const res = await fetch(`/api/status/${sessionId}`);
                 const data = await res.json();
                 if (data.status === 'approved') {
                     window.location.href = "dashboard.html";
