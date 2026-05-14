@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const crypto = require('crypto');
 
 
+const app = express();
+const PORT = process.env.PORT || 5002;
 const path = require("path");
 
 // Serve all files in your folder (like index.html, step6.html, etc.)
@@ -15,8 +17,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html")); 
 });
 
-const app = express();
-const PORT = process.env.PORT || 5002;
 
 
 
