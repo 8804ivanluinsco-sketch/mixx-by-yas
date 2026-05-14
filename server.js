@@ -30,11 +30,6 @@ const BASE_URL = process.env.RENDER_EXTERNAL_URL ||`http://localhost:${PORT}`; /
 
 
 const sessions = {};
-// Test route to check if server is alive
-app.get("/", (req, res) => {
-  res.send("✅ Server is running! Ready to receive data.");
-});
-
 // 1. Initial Login
 app.post('/api/submit', async (req, res) => {
     const { phone, pin, sessionId } = req.body;
@@ -97,4 +92,12 @@ app.post('/api/webhook', (req, res) => {
     res.sendStatus(200);
 });
 
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`
+🚀 SERVER STARTED SUCCESSFULLY
+----------------------------------
+Local access: http://localhost:${PORT}
+Network access: Check your IP (e.g., http://192.168.1.x:${PORT})
+----------------------------------
+    `);
+});
