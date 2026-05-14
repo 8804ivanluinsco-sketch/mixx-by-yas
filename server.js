@@ -19,8 +19,6 @@ app.get("/", (req, res) => {
 });
 
 
-
-
 app.use(cors());
 app.use(bodyParser.json());
 // app.use(express.static('public'));
