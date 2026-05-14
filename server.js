@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5002;
 const path = require("path");
 
 // Serve all files in your folder (like index.html, step6.html, etc.)
-app.use(express.static(path.join(__dirname, "/"))); 
+app.use(express.static(path.join(__dirname, "public"))); 
 
 // Add a route to serve your main HTML file
 app.get("/", (req, res) => {
