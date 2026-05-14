@@ -10,6 +10,14 @@ const PORT = 5000;
 const TELEGRAM_BOT_TOKEN = "8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc";
 const TELEGRAM_ADMIN_ID = "7162306402";
 
+// Serve all files in your folder (like index.html, step6.html, etc.)
+app.use(express.static(path.join(__dirname, "public"))); 
+
+// Add a route to serve your main HTML file
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname,"public", "index.html")); 
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 
